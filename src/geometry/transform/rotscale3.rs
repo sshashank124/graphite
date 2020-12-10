@@ -9,6 +9,12 @@ impl One for RotScale3 {
     const ONE: Self = Self(None);
 }
 
+impl Default for RotScale3 {
+    fn default() -> Self {
+        Self::ONE
+    }
+}
+
 impl RotScale3 {
     #[inline(always)]
     pub const fn new(r1: F3, r2: F3, r3: F3) -> Self {

@@ -10,6 +10,12 @@ impl One for Norm2 {
     const ONE: Self = Self::new(F2::ONE, F2::ZERO);
 }
 
+impl Default for Norm2 {
+    fn default() -> Self {
+        Self::ONE
+    }
+}
+
 impl Norm2 {
     const fn new(s: F2, t: F2) -> Self { Self { s, t } }
     pub fn translate(t: F2) -> Self { Self::new(F2::ONE, t) }
