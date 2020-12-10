@@ -3,9 +3,9 @@ use std::ops::{AddAssign, DivAssign, MulAssign, SubAssign};
 use std::ops::{BitAnd, BitOr};
 use std::ops::{Index, IndexMut};
 
+use super::*;
 use crate::{cw_unary_op, cw_binary_op, scalar_binary_op,
             scalar_binary_assign_op};
-use super::*;
 
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]

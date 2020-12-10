@@ -15,10 +15,14 @@ impl BBox {
     pub fn extents(&self) -> F3 { self.map(B::extent) }
 
     pub fn max_extent(&self) -> (F, Dim) {
-        self.extents().zip(A3(X, Y, Z), |a, b| (a, b))
-                      .fold((F::NEG_INF, X),
-                            |(a, b), (c, d)| if a > c { (a, b) }
-                                             else { (c, d) })
+        self.extents().zip(A3(X, Y, Z), |a, b| (a, b)).fold((F::NEG_INF, X),
+                                                            |(a, b), (c, d)| {
+                                                                if a > c {
+                                                                    (a, b)
+                                                                } else {
+                                                                    (c, d)
+                                                                }
+                                                            })
     }
 }
 
