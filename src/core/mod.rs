@@ -13,6 +13,15 @@ pub use dim::*;
 pub use interpolate::*;
 pub use num::*;
 
-pub type F = f32;
 pub type I = i32;
+
+#[cfg(not(feature="f64"))]
+pub type F = f32;
+#[cfg(feature="f64")]
+pub type F = f64;
+
+
+#[cfg(not(feature="f64"))]
 use std::f32 as fmod;
+#[cfg(feature="f64")]
+use std::f64 as fmod;
