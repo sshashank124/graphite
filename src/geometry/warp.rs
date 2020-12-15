@@ -10,12 +10,25 @@ pub trait Warp3<Params> {
     fn pdf(s: F3, p: Params) -> F;
 }
 
+#[derive(Clone, Copy, Debug)]
 pub struct UniformTriangle;
+
+#[derive(Clone, Copy, Debug)]
 pub struct UniformDisk;
+
+#[derive(Clone, Copy, Debug)]
 pub struct CosineHemisphere;
+
+#[derive(Clone, Copy, Debug)]
 pub struct UniformCylinder;
+
+#[derive(Clone, Copy, Debug)]
 pub struct UniformSphere;
+
+#[derive(Clone, Copy, Debug)]
 pub struct UniformHemisphere;
+
+#[derive(Clone, Copy, Debug)]
 pub struct BeckmannHemisphere;
 
 impl Warp2<()> for UniformTriangle {

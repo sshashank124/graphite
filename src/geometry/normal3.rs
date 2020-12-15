@@ -3,7 +3,7 @@ use std::ops::{Add, Deref, Div, Mul};
 use super::*;
 use crate::op;
 
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, Debug)]
 pub struct N(V);
 
 impl Zero for N {

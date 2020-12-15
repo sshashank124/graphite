@@ -1,5 +1,6 @@
 use super::*;
 
+#[derive(Clone, Copy, Debug)]
 pub struct Frame;
 
 impl Frame {

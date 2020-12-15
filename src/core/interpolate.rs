@@ -2,8 +2,13 @@ use std::ops::{Add, Mul};
 
 use super::*;
 
+#[derive(Clone, Copy, Debug)]
 pub struct LinearScale;
+
+#[derive(Clone, Copy, Debug)]
 pub struct PowerScale;
+
+#[derive(Clone, Copy, Debug)]
 pub struct SmoothScale;
 
 pub trait Interp<A> {
