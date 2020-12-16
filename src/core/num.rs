@@ -183,10 +183,10 @@ impl Inv for F {
     fn inv(self) -> F { self.recip() }
 }
 impl Epsilon for f32 {
-    const EPSILON: Self = 1e-4;
+    const EPSILON: Self = 1e-3;
 }
 impl Epsilon for f64 {
-    const EPSILON: Self = 1e-6;
+    const EPSILON: Self = 1e-5;
 }
 
 impl Float for F {
