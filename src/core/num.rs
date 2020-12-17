@@ -128,7 +128,7 @@ pub trait Inv {
 }
 
 pub trait Epsilon: Copy {
-    const EPSILON: Self;
+    const EPS: Self;
 }
 
 pub trait Float: Num + Half + Two + Inv + Epsilon {
@@ -162,7 +162,7 @@ pub trait Float: Num + Half + Two + Inv + Epsilon {
     fn discrete(a: Self, n: I) -> I;
 
     #[inline(always)]
-    fn approx_eq(a: Self, b: Self) -> bool { Self::abs(a - b) < Self::EPSILON }
+    fn approx_eq(a: Self, b: Self) -> bool { Self::abs(a - b) < Self::EPS }
 
     #[inline(always)]
     fn approx_zero(a: Self) -> bool { Self::approx_eq(a, Self::ZERO) }
@@ -183,10 +183,10 @@ impl Inv for F {
     fn inv(self) -> F { self.recip() }
 }
 impl Epsilon for f32 {
-    const EPSILON: Self = 1e-3;
+    const EPS: Self = 1e-4;
 }
 impl Epsilon for f64 {
-    const EPSILON: Self = 1e-5;
+    const EPS: Self = 1e-6;
 }
 
 impl Float for F {

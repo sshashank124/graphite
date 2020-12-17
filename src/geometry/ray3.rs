@@ -29,7 +29,7 @@ impl R {
     pub fn clipped(self, t: F) -> R { R::r(self.o, self.d, t) }
 
     #[inline(always)]
-    pub fn range(&self) -> B { B::b(F::EPSILON, self.t - F::EPSILON) }
+    pub fn range(&self) -> B { B::b(F::EPS, self.t - F::EPS) }
 }
 
 impl Mul<R> for T {
