@@ -26,7 +26,8 @@ impl Div<N> for T {
     fn div(self, n: N) -> N { N::v(self.inv().t() / n.0) }
 }
 
-impl From<F3> for N { fn from(f3: F3) -> Self { Self(f3.into()) } }
+impl From<F3> for N { fn from(f3: F3) -> Self { Self(V::from(f3)) } }
+impl From<N> for F3 { fn from(n: N) -> Self { F3::from(n.0) } }
 impl From<V> for N { fn from(v: V) -> Self { Self(v) } }
 
 impl Index<Dim> for N {

@@ -14,6 +14,7 @@ pub type II<const N: usize> = Arr<I, N>;
 pub type F4 = FF<4>;
 pub type F3 = FF<3>;
 pub type F2 = FF<2>;
+pub type I2 = II<2>;
 
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Arr<A, const N: usize>(pub [A; N]);
@@ -53,6 +54,12 @@ impl<A, const N: usize> Arr<A, N> where A: Copy {
 
     pub fn fold<B>(self, acc: B, f: impl Fn(B, A) -> B) -> B
     { self.0.iter().fold(acc, |b, &a| f(b, a)) }
+
+    pub fn reduce(self, f: impl Fn(A, A) -> A) -> A {
+        let mut it = self.0.iter();
+        let first = it.next().unwrap();
+        it.fold(*first, |b, &a| f(b, a))
+    }
 
     pub fn shl(self) -> Self {
         let mut aa = self.0.clone();
@@ -198,9 +205,8 @@ impl<A, const N: usize> Arr<A, N> where A: Copy + Zero + One {
     }
 }
 
-impl<A, const N: usize> Arr<A, N> where A: Copy + Zero + Add<Output = A> {
-    pub fn sum(self) -> A { self.fold(Zero::ZERO, Add::add) }
-}
+impl<A, const N: usize> Arr<A, N> where A: Copy + Add<Output = A>
+{ pub fn sum(self) -> A { self.reduce(Add::add) } }
 
 impl<A, const N: usize> Arr<A, N>
     where A: Copy + Zero + Add<Output = A> + Div<F, Output = A>
@@ -208,8 +214,8 @@ impl<A, const N: usize> Arr<A, N>
     pub fn mean(self) -> A { self.sum() / (N as F) }
 }
 
-impl<A, const N: usize> Arr<A, N> where A: Copy + One + Mul<Output = A>
-{ pub fn product(self) -> A { self.fold(One::ONE, Mul::mul) } }
+impl<A, const N: usize> Arr<A, N> where A: Copy + Mul<Output = A>
+{ pub fn product(self) -> A { self.reduce(Mul::mul) } }
 
 impl<A, const N: usize> Arr<A, N> {
     pub fn dot<B, C>(self, b: Arr<B, N>) -> C
@@ -225,6 +231,11 @@ impl<A, const N: usize> From<[A; N]> for Arr<A, N>
 
 impl<A> A3<A> where A: Copy
 { pub fn a2a(a2: A2<A>, a: A) -> Self { Self([a2[0], a2[1], a]) } }
+
+impl<const N: usize> FF<N> {
+    pub fn min(self) -> F { self.reduce(F::min) }
+    pub fn max(self) -> F { self.reduce(F::max) }
+}
 
 macro_rules! index {
     ($n:tt, $type:ident[$($vals:tt),*]) => {

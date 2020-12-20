@@ -1,4 +1,4 @@
-use std::ops::{Add, BitAnd, BitOr, Div, Mul, Sub};
+use std::ops::{Add, BitAnd, BitOr, Div, Index, Mul, Sub};
 
 use super::*;
 use crate::op;
@@ -14,8 +14,7 @@ impl BBox {
 
     pub fn max_extent(&self) -> (F, Dim) {
         self.extents().zip(XYZ, |a, b| (a, b))
-                      .fold((F::NEG_INF, X), |(a, b), (c, d)|
-                          if a > c { (a, b) } else { (c, d) })
+            .reduce(|(a, b), (c, d)| if a > c { (a, b) } else { (c, d) })
     }
 }
 
@@ -30,3 +29,8 @@ op!(BitOr::bitor, *BBox ->    *P -> BBox);
 
 op!(Mul::mul, T -> *BBox -> BBox);
 op!(Div::div, T -> *BBox -> BBox);
+
+impl Index<Dim> for BBox {
+    type Output = B;
+    fn index(&self, dim: Dim) -> &B { &self.0[dim] }
+}

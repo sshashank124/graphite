@@ -37,8 +37,8 @@ impl Div<V> for T {
     fn div(self, v: V) -> V { V(self.rot() / v.0) }
 }
 
-impl From<[F; 3]> for V { fn from(f3: [F; 3]) -> Self { Self(f3.into()) } }
 impl From<F3> for V { fn from(f3: F3) -> Self { Self(f3) } }
+impl From<V> for F3 { fn from(v: V) -> Self { v.0 } }
 
 impl Index<Dim> for V {
     type Output = F;

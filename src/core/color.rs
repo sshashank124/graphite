@@ -7,10 +7,14 @@ use crate::op;
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Color(F3);
 
-impl Color { pub fn gray(g: F) -> Self { Self(F3::rep(g)) } }
-
 impl Zero for Color { const ZERO: Self = Self(F3::ZERO); }
 impl One for Color { const ONE: Self = Self(F3::ONE); }
+
+impl Color {
+    pub fn rgb(rgb: F3) -> Self { Self(rgb) }
+    pub fn gray(g: F) -> Self { Self(F3::rep(g)) }
+    pub fn max_channel(self) -> F { self.0.max() }
+}
 
 op!(Neg::neg, *Color);
 op!(Inv::inv, *Color);

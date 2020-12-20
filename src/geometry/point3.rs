@@ -18,8 +18,8 @@ op!(Mul::mul, *P ->  F -> P);
 op!(Mul::mul,  T -> *P -> P);
 op!(Div::div,  T -> *P -> P);
 
-impl From<[F; 3]> for P { fn from(f3: [F; 3]) -> Self { Self(f3.into()) } }
 impl From<F3> for P { fn from(f3: F3) -> Self { Self(f3) } }
+impl From<P> for F3 { fn from(p: P) -> Self { p.0 } }
 
 impl Index<Dim> for P {
     type Output = F;
