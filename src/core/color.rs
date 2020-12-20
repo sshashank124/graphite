@@ -14,6 +14,7 @@ impl Color {
     pub fn rgb(rgb: F3) -> Self { Self(rgb) }
     pub fn gray(g: F) -> Self { Self(F3::rep(g)) }
     pub fn max_channel(self) -> F { self.0.max() }
+    pub fn to_rgb(self) -> F3 { self.0 }
 }
 
 op!(Neg::neg, *Color);
