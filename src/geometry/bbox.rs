@@ -4,7 +4,7 @@ use super::*;
 use crate::op;
 
 #[derive(Clone, Copy, Debug)]
-pub struct BBox(A3<B>);
+pub struct BBox(pub A3<B>);
 
 impl Zero for BBox { const ZERO: Self = BBox(Arr::ZERO); }
 
