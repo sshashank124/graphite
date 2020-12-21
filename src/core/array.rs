@@ -17,7 +17,7 @@ pub type F2 = FF<2>;
 pub type I2 = II<2>;
 
 #[derive(Clone, Copy, Debug, PartialEq)]
-pub struct Arr<A, const N: usize>(pub [A; N]);
+pub struct Arr<A, const N: usize>(pub(crate) [A; N]);
 
 impl<A, const N: usize> Arr<A, N> {
     pub fn from_iter<It>(it: It) -> Self where It: Iterator<Item=A> {
@@ -274,3 +274,15 @@ macro_rules! index_mut {
 index!(3, Dim[X, Y, Z]); index_mut!(3, Dim[X, Y, Z]);
 index!(2, Dim[X, Y]); index_mut!(2, Dim[X, Y]);
 index!(2, bool[false, true]); index_mut!(2, bool[false, true]);
+
+impl<const N: usize> From<II<N>> for FF<N>
+{ fn from(ii: II<N>) -> Self { ii.map(|i| i as F) } }
+
+impl<const N: usize> From<FF<N>> for II<N>
+{ fn from(ff: FF<N>) -> Self { ff.map(|f| f as I) } }
+
+impl<const N: usize> From<Arr<usize, N>> for II<N>
+{ fn from(uu: Arr<usize, N>) -> Self { uu.map(|u| u as I) } }
+
+impl<const N: usize> From<II<N>> for Arr<usize, N>
+{ fn from(ii: II<N>) -> Self { ii.map(|i| i as usize) } }

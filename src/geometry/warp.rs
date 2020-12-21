@@ -39,7 +39,7 @@ impl UniformDisk {
             let (r, t) = if F::abs(u[X]) > F::abs(u[Y]) {
                 (u[X], F::FOURTH_PI * u[Y] / u[X])
             } else { (u[Y], F::HALF_PI - F::FOURTH_PI * u[X] / u[Y]) };
-            F2::from([F::cos(t), F::sin(t)]) * r
+            Arr([F::cos(t), F::sin(t)]) * r
         }
     }
 

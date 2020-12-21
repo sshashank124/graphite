@@ -21,7 +21,7 @@ impl RotScale3 {
     { Self(Arr::from_iter((0..=2).map(F3::unit_dim)) * s) }
 
     pub fn rotate(axis: F3, theta: F) -> Self {
-        let V(Arr([x, y, z])) = V(axis).unit();
+        let Arr([x, y, z]) = F3::from(V(axis).unit());
         let ct = theta.cosd();
         let cc = 1. - ct;
         let st = theta.sind();
@@ -38,17 +38,17 @@ impl RotScale3 {
 
     pub fn from_frame(v: V) -> Self {
         let v2 = V(if F::abs(v[X]) > F::abs(v[Y]) {
-            F3::from([-v[Z], 0., v[X]]) / F::sqrt(v[X].sq() + v[Z].sq())
+            Arr([-v[Z], 0., v[X]]) / F::sqrt(v[X].sq() + v[Z].sq())
         } else
-        { F3::from([0., v[Z], -v[Y]]) / F::sqrt(v[Y].sq() + v[Z].sq()) });
-        Self::from_cols(v2.0, (v * v2).0, v.0)
+        { Arr([0., v[Z], -v[Y]]) / F::sqrt(v[Y].sq() + v[Z].sq()) });
+        Self::from_cols(F3::from(v2), F3::from(v * v2), F3::from(v))
     }
 
     pub fn look_at(dir: V, up: V) -> Self {
         let dir = dir.unit();
         let right = (up.unit() * dir).unit();
         let up = (dir * right).unit();
-        Self::from_cols(right.0, up.0, dir.0)
+        Self::from_cols(F3::from(right), F3::from(up), F3::from(dir))
     }
 
     pub fn t(&self) -> Self {
