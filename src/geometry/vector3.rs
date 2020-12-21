@@ -9,8 +9,7 @@ pub struct V(pub(crate) F3);
 impl Zero for V { const ZERO: Self = V(F3::ZERO); }
 
 impl V {
-    pub fn dot(self, v: V) -> F { self.0.dot(v.0) }
-    pub fn norm2(self) -> F { self.dot(self) }
+    pub fn norm2(self) -> F { dot(self, self) }
     pub fn norm(self) -> F { self.norm2().sqrt() }
     pub fn unit(self) -> V { self / self.norm() }
 

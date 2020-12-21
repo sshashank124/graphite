@@ -25,8 +25,8 @@ impl UniformTriangle {
     pub fn warp(s: F2) -> F2 {
         let t = s * 0.5;
         let o = t[1] - t[0];
-        if F::is_pos(o) { [t[0], t[1] + o].into() }
-        else { [t[0] - o, t[1]].into() }
+        Arr(if F::is_pos(o) { [t[0], t[1] + o] }
+            else { [t[0] - o, t[1]] })
     }
 
     pub fn pdf() -> F { 2. }
@@ -49,7 +49,7 @@ impl UniformDisk {
 impl CosineHemisphere {
     pub fn warp(s: F2) -> F3 {
         let p = UniformDisk::warp(s);
-        F3::a2a(p, F::sqrt(1. - p.dot(p)))
+        F3::a2a(p, F::sqrt(1. - dot(p, p)))
     }
 
     pub fn pdf(s: F3) -> F { Frame::ct(s) * F::INV_PI }
@@ -58,7 +58,7 @@ impl CosineHemisphere {
 impl UniformCylinder {
     pub fn warp(s: F2) -> F3 {
         let t = F::TWO_PI * s[Y];
-        [F::cos(t), F::sin(t), 2. * s[X] - 1.].into()
+        Arr([F::cos(t), F::sin(t), 2. * s[X] - 1.])
     }
 
     pub fn pdf() -> F { F::INV_4PI }
@@ -68,7 +68,7 @@ impl UniformSphere {
     pub fn warp(s: F2) -> F3 {
         let v = UniformCylinder::warp(s);
         let r = Frame::st(v);
-        [r * v[X], r * v[Y], v[Z]].into()
+        Arr([r * v[X], r * v[Y], v[Z]])
     }
 
     pub fn pdf() -> F { F::INV_4PI }
@@ -77,7 +77,7 @@ impl UniformSphere {
 impl UniformHemisphere {
     pub fn warp(s: F2) -> F3 {
         let v = UniformSphere::warp(s);
-        [v[X], v[Y], v[Z].abs()].into()
+        Arr([v[X], v[Y], v[Z].abs()])
     }
 
     pub fn pdf() -> F { F::INV_2PI }
@@ -88,7 +88,7 @@ impl BeckmannHemisphere {
         let c2t = (1. - alpha.sq() * F::ln(F::ONE - s[0])).inv();
         let phi = F::TWO_PI * s[1];
         let r = F::sqrt(1. - c2t);
-        [r * F::cos(phi), r * F::sin(phi), F::sqrt(c2t)].into()
+        Arr([r * F::cos(phi), r * F::sin(phi), F::sqrt(c2t)])
     }
 
     pub fn pdf(s: F3, alpha: F) -> F {

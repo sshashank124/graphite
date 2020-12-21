@@ -84,5 +84,5 @@ pub fn quad(a: F, b: F, c: F) -> Option<F2> {
     let q = -0.5 * (b + b.signum() * disqrt);
     let t1 = q / a;
     let t2 = c / q;
-    Some(if t1 <= t2 { [t1, t2] } else { [t2, t1] }.into())
+    Some(Arr(if t1 <= t2 { [t1, t2] } else { [t2, t1] }))
 }

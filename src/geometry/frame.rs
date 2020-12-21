@@ -23,7 +23,7 @@ impl Frame {
         let v = v.into();
         let y = F::atan2(v[Y], v[X]);
         let y = if y < 0. { y + F::TWO_PI } else { y };
-        [F::acos(v[Z]), y].into()
+        Arr([F::acos(v[Z]), y])
     }
 
     pub fn spher2cart(v: F2) -> F3 {

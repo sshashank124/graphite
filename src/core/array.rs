@@ -217,12 +217,12 @@ impl<A, const N: usize> Arr<A, N>
 impl<A, const N: usize> Arr<A, N> where A: Copy + Mul<Output = A>
 { pub fn product(self) -> A { self.reduce(Mul::mul) } }
 
-impl<A, const N: usize> Arr<A, N> {
-    pub fn dot<B, C>(self, b: Arr<B, N>) -> C
-        where Arr<A, N>: Mul<Arr<B, N>, Output = Arr<C, N>>,
-                      C: Copy + Zero + Add<Output = C>
-    { (self * b).sum() }
-}
+pub fn inner_product<A, B, C, AA, BB, const N: usize>(a: AA, b: BB) -> C
+    where AA: Into<Arr<A, N>>,
+          BB: Into<Arr<B, N>>,
+          C: Copy + Zero + Add<Output = C>,
+          Arr<A, N>: Mul<Arr<B, N>, Output = Arr<C, N>>,
+{ (a.into() * b.into()).sum() }
 
 impl<A, const N: usize> From<[A; N]> for Arr<A, N>
 { fn from(arr: [A; N]) -> Self { Self(arr) } }
@@ -236,6 +236,11 @@ impl<const N: usize> FF<N> {
     pub fn min(self) -> F { self.reduce(F::min) }
     pub fn max(self) -> F { self.reduce(F::max) }
 }
+
+pub fn dot<AA, BB, const N: usize>(a: AA, b: BB) -> F
+    where AA: Into<FF<N>>,
+          BB: Into<FF<N>>,
+{ inner_product(a, b) }
 
 macro_rules! index {
     ($n:tt, $type:ident[$($vals:tt),*]) => {

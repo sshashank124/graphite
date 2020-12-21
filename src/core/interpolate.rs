@@ -18,7 +18,7 @@ pub trait Interp<A> {
 impl<A> Interp<A> for LinearScale
     where A2<A>: Mul<F2, Output = A2<A>>,
               A: Copy + Zero + Add<Output = A>
-{ fn interp(a: A2<A>, t: F) -> A { a.dot([1. - t, t].into()) } }
+{ fn interp(a: A2<A>, t: F) -> A { inner_product(a, Arr([1. - t, t])) } }
 
 impl<A> Interp<A> for SmoothScale
     where A: Copy + Zero + Add<Output = A> + Mul<F, Output = A>
@@ -29,7 +29,7 @@ impl<A> Interp<A> for SmoothScale
 
 pub trait Balance {
     fn balance(a: F2) -> F;
-    fn balance2(a: F, b: F) -> F { Self::balance([a, b].into()) }
+    fn balance2(a: F, b: F) -> F { Self::balance(Arr([a, b])) }
 }
 
 impl Balance for LinearScale { fn balance(a: F2) -> F { a[0] / a.sum() } }

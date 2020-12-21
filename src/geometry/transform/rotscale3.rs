@@ -12,7 +12,7 @@ impl Default for RotScale3 { fn default() -> Self { Self::ONE } }
 
 impl RotScale3 {
     fn from_rows(r1: F3, r2: F3, r3: F3) -> Self
-    { Self([r1, r2, r3].into()) }
+    { Self(Arr([r1, r2, r3])) }
 
     pub fn from_cols(c1: F3, c2: F3, c3: F3) -> Self
     { Self::from_rows(c1, c2, c3).t() }
@@ -25,15 +25,15 @@ impl RotScale3 {
         let ct = theta.cosd();
         let cc = 1. - ct;
         let st = theta.sind();
-        Self::from_rows([ct + x.sq() * cc,
-                         x * y * cc - z * st,
-                         x * z * cc + y * st].into(),
-                        [y * x * cc + z * st,
-                         ct + y.sq() * cc,
-                         y * z * cc - x * st].into(),
-                        [z * x * cc - y * st,
-                         z * y * cc + x * st,
-                         ct + z.sq() * cc].into())
+        Self::from_rows(Arr([ct + x.sq() * cc,
+                             x * y * cc - z * st,
+                             x * z * cc + y * st]),
+                        Arr([y * x * cc + z * st,
+                             ct + y.sq() * cc,
+                             y * z * cc - x * st]),
+                        Arr([z * x * cc - y * st,
+                             z * y * cc + x * st,
+                             ct + z.sq() * cc]))
     }
 
     pub fn from_frame(v: V) -> Self {
@@ -53,9 +53,9 @@ impl RotScale3 {
 
     pub fn t(&self) -> Self {
         let m = self.0;
-        Self::from_rows([m[0_usize][0], m[1_usize][0], m[2_usize][0]].into(),
-                        [m[0_usize][1], m[1_usize][1], m[2_usize][1]].into(),
-                        [m[0_usize][2], m[1_usize][2], m[2_usize][2]].into())
+        Self::from_rows(Arr([m[0_usize][0], m[1_usize][0], m[2_usize][0]]),
+                        Arr([m[0_usize][1], m[1_usize][1], m[2_usize][1]]),
+                        Arr([m[0_usize][2], m[1_usize][2], m[2_usize][2]]))
     }
 }
 
@@ -63,7 +63,7 @@ impl<A> Mul<A3<A>> for RotScale3
     where A: Copy + Zero + Add<Output = A> + Mul<F, Output = A>
 {
     type Output = A3<A>;
-    fn mul(self, o: A3<A>) -> A3<A> { A3::rep(o).zip(self.0, A3::dot) }
+    fn mul(self, o: A3<A>) -> A3<A> { A3::rep(o).zip(self.0, inner_product) }
 }
 
 impl Mul for RotScale3 {
