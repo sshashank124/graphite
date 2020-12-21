@@ -35,4 +35,4 @@ pub trait Balance {
 impl Balance for LinearScale { fn balance(a: F2) -> F { a[0] / a.sum() } }
 
 impl Balance for PowerScale
-{ fn balance(a: F2) -> F { LinearScale::balance(a.map(F::sq)) } }
+{ fn balance(a: F2) -> F { LinearScale::balance(map(a, F::sq)) } }

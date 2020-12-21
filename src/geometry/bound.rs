@@ -1,4 +1,4 @@
-use std::ops::{Add, BitAnd, BitOr, Div, Mul, Sub};
+use std::ops::{Add, BitAnd, BitOr, Div, Index, Mul, Sub};
 
 use super::*;
 use crate::op;
@@ -52,3 +52,6 @@ impl BitAnd for B {
         B::b(F::max(self.0[0], b.0[0]), F::min(self.0[1], b.0[1]))
     }
 }
+
+impl Index<usize> for B
+{ type Output = F; fn index(&self, i: usize) -> &F { &self.0[i] } }

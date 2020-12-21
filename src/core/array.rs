@@ -30,8 +30,6 @@ impl<A, const N: usize> Arr<A, N> {
         Self(unsafe { aaptr.read() })
     }
 
-    pub fn map<B>(self, f: impl Fn(A) -> B) -> Arr<B, N> { Arr(self.0.map(f)) }
-
     pub fn zips<B, C>(self, b: B, f: impl Fn(A, B) -> C) -> Arr<C, N>
         where B: Copy
     { Arr(self.0.map(|x| f(x, b))) }
@@ -44,6 +42,10 @@ impl<A, const N: usize> Arr<A, N> {
         where B: Copy
     { self.0.iter_mut().for_each(|x| f(x, b)); }
 }
+
+pub fn map<A, AA, B, const N: usize>(a: AA, f: impl Fn(A) -> B) -> Arr<B, N>
+    where AA: Into<Arr<A, N>>
+{ Arr(a.into().0.map(f)) }
 
 impl<A, const N: usize> Arr<A, N> where A: Copy {
     pub fn rep(a: A) -> Self { Self([a; N]) }
@@ -89,7 +91,7 @@ macro_rules! cw_unary_op {
             where A: $trait<Output = A>
         {
             type Output = Arr<A, N>;
-            fn $op(self) -> Self::Output { self.map($trait::$op) }
+            fn $op(self) -> Self::Output { map(self, $trait::$op) }
         }
     };
 }
@@ -281,13 +283,13 @@ index!(2, Dim[X, Y]); index_mut!(2, Dim[X, Y]);
 index!(2, bool[false, true]); index_mut!(2, bool[false, true]);
 
 impl<const N: usize> From<II<N>> for FF<N>
-{ fn from(ii: II<N>) -> Self { ii.map(|i| i as F) } }
+{ fn from(ii: II<N>) -> Self { map(ii, |i: I| i as F) } }
 
 impl<const N: usize> From<FF<N>> for II<N>
-{ fn from(ff: FF<N>) -> Self { ff.map(|f| f as I) } }
+{ fn from(ff: FF<N>) -> Self { map(ff, |f: F| f as I) } }
 
 impl<const N: usize> From<Arr<usize, N>> for II<N>
-{ fn from(uu: Arr<usize, N>) -> Self { uu.map(|u| u as I) } }
+{ fn from(uu: Arr<usize, N>) -> Self { map(uu, |u: usize| u as I) } }
 
 impl<const N: usize> From<II<N>> for Arr<usize, N>
-{ fn from(ii: II<N>) -> Self { ii.map(|i| i as usize) } }
+{ fn from(ii: II<N>) -> Self { map(ii, |i: I| i as usize) } }
