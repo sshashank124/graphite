@@ -17,7 +17,7 @@ pub type F2 = FF<2>;
 pub type I2 = II<2>;
 
 #[derive(Clone, Copy, Debug, PartialEq)]
-pub struct Arr<A, const N: usize>(pub(crate) [A; N]);
+pub struct Arr<A, const N: usize>(pub [A; N]);
 
 impl<A, const N: usize> Arr<A, N> {
     pub fn from_iter<It>(it: It) -> Self where It: Iterator<Item=A> {
