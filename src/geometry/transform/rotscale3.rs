@@ -1,24 +1,20 @@
 use super::*;
 
 #[derive(Clone, Copy, Debug, PartialEq)]
-pub struct RotScale3(A3<F3>);
+pub struct RotScale3(Option<A3<F3>>);
 
-impl One for RotScale3 {
-    const ONE: Self = Self(Arr([Arr([F::ONE, F::ZERO, F::ZERO]),
-                                Arr([F::ZERO, F::ONE, F::ZERO]),
-                                Arr([F::ZERO, F::ZERO, F::ONE])]));
-}
+impl One for RotScale3 { const ONE: Self = Self(None); }
 impl Default for RotScale3 { #[inline(always)] fn default() -> Self { Self::ONE } }
 
 impl RotScale3 {
     #[inline(always)] fn from_rows(r1: F3, r2: F3, r3: F3) -> Self
-    { Self(Arr([r1, r2, r3])) }
+    { Self(Some(Arr([r1, r2, r3]))) }
 
     #[inline(always)] pub fn from_cols(c1: F3, c2: F3, c3: F3) -> Self
     { Self::from_rows(c1, c2, c3).t() }
 
     #[inline(always)] pub fn scale(s: F3) -> Self
-    { Self(Arr::from_iter((0..=2).map(F3::unit_dim)) * s) }
+    { Self(Some(Arr::from_iter((0..=2).map(F3::unit_dim)) * s)) }
 
     #[inline(always)] pub fn rotate(axis: F3, theta: F) -> Self {
         let Arr([x, y, z]) = F3::from(V(axis).unit());
@@ -52,10 +48,11 @@ impl RotScale3 {
     }
 
     #[inline(always)] pub fn t(&self) -> Self {
-        let m = self.0;
-        Self::from_rows(Arr([m[0_usize][0], m[1_usize][0], m[2_usize][0]]),
-                        Arr([m[0_usize][1], m[1_usize][1], m[2_usize][1]]),
-                        Arr([m[0_usize][2], m[1_usize][2], m[2_usize][2]]))
+        if let Some(m) = self.0 {
+            Self::from_rows(Arr([m[0_usize][0], m[1_usize][0], m[2_usize][0]]),
+                            Arr([m[0_usize][1], m[1_usize][1], m[2_usize][1]]),
+                            Arr([m[0_usize][2], m[1_usize][2], m[2_usize][2]]))
+        } else { *self }
     }
 }
 
@@ -64,10 +61,11 @@ impl<A> Mul<A3<A>> for RotScale3
 {
     type Output = A3<A>;
     #[inline(always)] fn mul(self, o: A3<A>) -> A3<A>
-    { A3::rep(o).zip(self.0, inner_product) }
+    { self.0.map(|m| A3::rep(o).zip(m, inner_product)).unwrap_or_else(|| o) }
 }
 
 impl Mul for RotScale3 {
     type Output = Self;
-    #[inline(always)] fn mul(self, o: Self) -> Self { Self(o * self.t().0).t() }
+    #[inline(always)] fn mul(self, o: Self) -> Self
+    { self.t().0.map(|m| Self(Some(o * m)).t()).unwrap_or_else(|| o) }
 }
