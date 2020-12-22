@@ -10,22 +10,23 @@ pub struct Affine3 {
 impl One for Affine3 { const ONE: Self = Self::new(RotScale3::ONE, F3::ZERO); }
 
 impl Affine3 {
-    pub const fn new(r: RotScale3, t: F3) -> Self { Self { r, t } }
+    #[inline] pub const fn new(r: RotScale3, t: F3) -> Self { Self { r, t } }
 
-    pub fn translate(t: F3) -> Self { Self::new(RotScale3::ONE, t) }
-    pub fn scale(s: F3) -> Self { Self::new(RotScale3::scale(s), F3::ZERO) }
+    #[inline] pub fn translate(t: F3) -> Self { Self::new(RotScale3::ONE, t) }
+    #[inline] pub fn scale(s: F3) -> Self
+    { Self::new(RotScale3::scale(s), F3::ZERO) }
 
-    pub fn rotate(axis: F3, theta: F) -> Self
+    #[inline] pub fn rotate(axis: F3, theta: F) -> Self
     { Self::new(RotScale3::rotate(axis, theta), F3::ZERO) }
 
-    pub fn from_frame(v: V) -> Self
+    #[inline] pub fn from_frame(v: V) -> Self
     { Self::new(RotScale3::from_frame(v), F3::ZERO) }
 
-    pub fn look_at(pos: P, target: P, up: V) -> Self
+    #[inline] pub fn look_at(pos: P, target: P, up: V) -> Self
     { Self::new(RotScale3::look_at(target - pos, up), pos.0) }
 
-    pub fn rot(&self) -> Self { Self::new(self.r, F3::ZERO) }
-    pub fn t(&self) -> Self { Self::new(self.r.t(), F3::ZERO) }
+    #[inline] pub fn rot(&self) -> Self { Self::new(self.r, F3::ZERO) }
+    #[inline] pub fn t(&self) -> Self { Self::new(self.r.t(), F3::ZERO) }
 }
 
 impl<A> Mul<A3<A>> for Affine3
@@ -33,10 +34,12 @@ impl<A> Mul<A3<A>> for Affine3
            + Mul<F, Output = A>
 {
     type Output = A3<A>;
-    fn mul(self, o: A3<A>) -> A3<A> { (self.r * o).zip(self.t, Add::add) }
+    #[inline] fn mul(self, o: A3<A>) -> A3<A>
+    { (self.r * o).zip(self.t, Add::add) }
 }
 
 impl Mul for Affine3 {
     type Output = Self;
-    fn mul(self, o: Self) -> Self { Self::new(self.r * o.r, self * o.t) }
+    #[inline] fn mul(self, o: Self) -> Self
+    { Self::new(self.r * o.r, self * o.t) }
 }

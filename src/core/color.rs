@@ -11,10 +11,10 @@ impl Zero for Color { const ZERO: Self = Self(F3::ZERO); }
 impl One for Color { const ONE: Self = Self(F3::ONE); }
 
 impl Color {
-    pub fn rgb(rgb: F3) -> Self { Self(rgb) }
-    pub fn gray(g: F) -> Self { Self(F3::rep(g)) }
-    pub fn max_channel(self) -> F { self.0.max() }
-    pub fn to_rgb(self) -> F3 { self.0 }
+    #[inline] pub fn rgb(rgb: F3) -> Self { Self(rgb) }
+    #[inline] pub fn gray(g: F) -> Self { Self(F3::rep(g)) }
+    #[inline] pub fn max_channel(self) -> F { self.0.max() }
+    #[inline] pub fn to_rgb(self) -> F3 { self.0 }
 }
 
 op!(Neg::neg, *Color);
@@ -39,11 +39,13 @@ op!(DivAssign::div_assign, *mut Color -> F -> ());
 // TODO implement indexing + with R, G, B + spectral channels
 
 impl Sum for Color {
+    #[inline]
     fn sum<It>(it: It) -> Self where It: Iterator<Item=Self>
     { Color(it.map(|i| i.0).sum()) }
 }
 
 impl Product for Color {
+    #[inline]
     fn product<It>(it: It) -> Self where It: Iterator<Item=Self>
     { Color(it.map(|i| i.0).product()) }
 }
