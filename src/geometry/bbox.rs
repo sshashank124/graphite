@@ -6,11 +6,11 @@ use crate::op;
 #[derive(Clone, Copy, Debug)]
 pub struct BBox(pub A3<B>);
 
-impl Zero for BBox { const ZERO: Self = BBox(Arr::ZERO); }
+impl Zero for BBox { const ZERO: Self = BBox(A3::ZERO); }
 
 impl BBox {
-    #[inline(always)] pub fn center(&self) -> P { P(map(self.0, B::center)) }
-    #[inline(always)] pub fn extents(&self) -> F3 { map(self.0, B::extent) }
+    #[inline(always)] pub fn center(&self) -> P { P(self.0.map(B::center)) }
+    #[inline(always)] pub fn extents(&self) -> F3 { self.0.map(B::extent) }
 
     #[inline(always)] pub fn max_extent(&self) -> (F, Dim) {
         self.extents().zip(XYZ, |a, b| (a, b))

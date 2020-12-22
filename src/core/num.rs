@@ -2,14 +2,14 @@ use std::ops::*;
 
 use super::*;
 
-pub trait Zero { const ZERO: Self; }
-pub trait One { const ONE: Self; }
+pub trait Zero: Copy { const ZERO: Self; }
+pub trait One: Copy { const ONE: Self; }
 pub trait Two: Copy { const TWO: Self; }
 pub trait Half: Copy { const HALF: Self; }
 pub trait Inv { type Output; fn inv(self) -> Self; }
 pub trait Epsilon: Copy { const EPS: Self; }
 
-pub trait Num: Copy + PartialOrd + PartialEq
+pub trait Num: PartialOrd + PartialEq
              + Zero + One + Two + Neg<Output = Self>
              + Add<Self, Output = Self> + AddAssign<Self>
              + Sub<Self, Output = Self> + SubAssign<Self>
@@ -79,19 +79,17 @@ pub trait Float: Num + Half + Inv + Epsilon {
     fn approx_one(a: Self) -> bool { Self::approx_eq(a, Self::ONE) }
 }
 
-#[inline(always)]
-pub fn difference_of_products(a: F, b: F, c: F, d: F) -> F {
+#[inline(always)] pub fn difference_of_products(a: F, b: F, c: F, d: F) -> F {
     let cd = c * d;
     a.mul_add(b, -cd) + c.mul_add(-d, cd)
 }
 
-#[inline(always)]
-pub fn quad(a: F, b: F, c: F) -> Option<F2> {
+#[inline(always)] pub fn quad(a: F, b: F, c: F) -> Option<F2> {
     let dis = difference_of_products(b, b, 4. * a, c);
     if dis < 0. { return None }
     let disqrt = dis.sqrt();
     let q = -0.5 * (b + b.signum() * disqrt);
     let t1 = q / a;
     let t2 = c / q;
-    Some(Arr(if t1 <= t2 { [t1, t2] } else { [t2, t1] }))
+    Some(if t1 <= t2 { A2(t1, t2) } else { A2(t2, t1) })
 }

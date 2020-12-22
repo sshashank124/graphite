@@ -8,4 +8,4 @@ pub enum Dim {
 }
 pub use Dim::*;
 
-pub const XYZ: A3<Dim> = Arr([X, Y, Z]);
+pub const XYZ: A3<Dim> = A3(X, Y, Z);

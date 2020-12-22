@@ -1,12 +1,14 @@
-mod array;
+mod array2;
+mod array3;
 mod color;
 mod dim;
 mod interpolate;
 mod num;
-mod op;
+mod ops;
 mod scalar;
 
-pub use array::*;
+pub use array2::*;
+pub use array3::*;
 pub use color::*;
 pub use dim::*;
 pub use interpolate::*;

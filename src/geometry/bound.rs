@@ -9,10 +9,10 @@ pub struct B(pub(crate) F2);
 impl Zero for B { const ZERO: Self = B::b(F::POS_INF, F::NEG_INF); }
 
 impl B {
-    #[inline(always)] pub const fn b(l: F, u: F) -> B { B(Arr([l, u])) }
+    #[inline(always)] pub const fn b(l: F, u: F) -> B { B(A2(l, u)) }
     #[inline(always)] pub fn point(f: F) -> B { B(F2::rep(f)) }
     #[inline(always)] pub fn ordered(a: F2) -> B
-    { if a[0] > a[1] { B(a.shl()) } else { B(a) } }
+    { if a[0] > a[1] { B(a.flip()) } else { B(a) } }
 
     #[inline(always)] pub fn bounds(self, t: F) -> bool
     { self.0[0] <= t && t <= self.0[1] }
@@ -55,5 +55,7 @@ impl BitAnd for B {
     }
 }
 
-impl Index<usize> for B
-{ type Output = F; #[inline(always)] fn index(&self, i: usize) -> &F { &self.0[i] } }
+impl Index<usize> for B {
+    type Output = F;
+    #[inline(always)] fn index(&self, i: usize) -> &F { &self.0[i] }
+}

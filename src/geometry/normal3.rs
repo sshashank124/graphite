@@ -22,9 +22,11 @@ impl Div<N> for T {
     #[inline(always)] fn div(self, n: N) -> N { N(self.inv().t() / n.0) }
 }
 
-impl From<F3> for N { #[inline(always)] fn from(f3: F3) -> Self { Self(V(f3)) } }
+impl From<F3> for N
+{ #[inline(always)] fn from(f3: F3) -> Self { Self(V(f3)) } }
 impl From<N> for F3 { #[inline(always)] fn from(n: N) -> Self { n.0.0 } }
-impl From<V> for N { #[inline(always)] fn from(v: V) -> Self { Self(v.unit()) } }
+impl From<V> for N
+{ #[inline(always)] fn from(v: V) -> Self { Self(v.unit()) } }
 impl From<N> for V { #[inline(always)] fn from(n: N) -> Self { n.0 } }
 
 impl Index<Dim> for N {

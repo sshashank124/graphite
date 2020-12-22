@@ -25,8 +25,8 @@ impl UniformTriangle {
     #[inline(always)] pub fn warp(s: F2) -> F2 {
         let t = s * 0.5;
         let o = t[1] - t[0];
-        Arr(if F::is_pos(o) { [t[0], t[1] + o] }
-            else { [t[0] - o, t[1]] })
+        if F::is_pos(o) { A2(t[0], t[1] + o) }
+        else { A2(t[0] - o, t[1]) }
     }
 
     #[inline(always)] pub fn pdf() -> F { 2. }
@@ -39,7 +39,7 @@ impl UniformDisk {
             let (r, t) = if F::abs(u[X]) > F::abs(u[Y]) {
                 (u[X], F::FOURTH_PI * u[Y] / u[X])
             } else { (u[Y], F::HALF_PI - F::FOURTH_PI * u[X] / u[Y]) };
-            Arr([F::cos(t), F::sin(t)]) * r
+            A2(F::cos(t), F::sin(t)) * r
         }
     }
 
@@ -49,16 +49,17 @@ impl UniformDisk {
 impl CosineHemisphere {
     #[inline(always)] pub fn warp(s: F2) -> F3 {
         let p = UniformDisk::warp(s);
-        F3::a2a(p, F::sqrt(1. - dot(p, p)))
+        F3::a2a(p, F::sqrt(1. - F2::dot(p, p)))
     }
 
-    #[inline(always)] pub fn pdf<A: Into<F3>>(s: A) -> F { Frame::ct(s) * F::INV_PI }
+    #[inline(always)] pub fn pdf<A: Into<F3>>(s: A) -> F
+    { Frame::ct(s) * F::INV_PI }
 }
 
 impl UniformCylinder {
     #[inline(always)] pub fn warp(s: F2) -> F3 {
         let t = F::TWO_PI * s[Y];
-        Arr([F::cos(t), F::sin(t), 2. * s[X] - 1.])
+        A3(F::cos(t), F::sin(t), 2. * s[X] - 1.)
     }
 
     #[inline(always)] pub fn pdf() -> F { F::INV_4PI }
@@ -68,7 +69,7 @@ impl UniformSphere {
     #[inline(always)] pub fn warp(s: F2) -> F3 {
         let v = UniformCylinder::warp(s);
         let r = Frame::st(v);
-        Arr([r * v[X], r * v[Y], v[Z]])
+        A3(r * v[X], r * v[Y], v[Z])
     }
 
     #[inline(always)] pub fn pdf() -> F { F::INV_4PI }
@@ -77,7 +78,7 @@ impl UniformSphere {
 impl UniformHemisphere {
     #[inline(always)] pub fn warp(s: F2) -> F3 {
         let v = UniformSphere::warp(s);
-        Arr([v[X], v[Y], v[Z].abs()])
+        A3(v[X], v[Y], v[Z].abs())
     }
 
     #[inline(always)] pub fn pdf() -> F { F::INV_2PI }
@@ -88,7 +89,7 @@ impl BeckmannHemisphere {
         let c2t = (1. - alpha.sq() * F::ln(F::ONE - s[0])).inv();
         let phi = F::TWO_PI * s[1];
         let r = F::sqrt(1. - c2t);
-        Arr([r * F::cos(phi), r * F::sin(phi), F::sqrt(c2t)])
+        A3(r * F::cos(phi), r * F::sin(phi), F::sqrt(c2t))
     }
 
     #[inline(always)] pub fn pdf<A: Into<F3>>(s: A, alpha: F) -> F {

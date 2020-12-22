@@ -4,39 +4,40 @@ use super::*;
 pub struct RotScale3(Option<A3<F3>>);
 
 impl One for RotScale3 { const ONE: Self = Self(None); }
-impl Default for RotScale3 { #[inline(always)] fn default() -> Self { Self::ONE } }
+impl Default for RotScale3
+{ #[inline(always)] fn default() -> Self { Self::ONE } }
 
 impl RotScale3 {
     #[inline(always)] fn from_rows(r1: F3, r2: F3, r3: F3) -> Self
-    { Self(Some(Arr([r1, r2, r3]))) }
+    { Self(Some(A3(r1, r2, r3))) }
 
     #[inline(always)] pub fn from_cols(c1: F3, c2: F3, c3: F3) -> Self
     { Self::from_rows(c1, c2, c3).t() }
 
     #[inline(always)] pub fn scale(s: F3) -> Self
-    { Self(Some(Arr::from_iter((0..=2).map(F3::unit_dim)) * s)) }
+    { Self(Some(XYZ.map(F3::basis) * s)) }
 
     #[inline(always)] pub fn rotate(axis: F3, theta: F) -> Self {
-        let Arr([x, y, z]) = F3::from(V(axis).unit());
+        let A3(x, y, z) = F3::from(V(axis).unit());
         let ct = theta.cosd();
         let cc = 1. - ct;
         let st = theta.sind();
-        Self::from_rows(Arr([ct + x.sq() * cc,
-                             x * y * cc - z * st,
-                             x * z * cc + y * st]),
-                        Arr([y * x * cc + z * st,
-                             ct + y.sq() * cc,
-                             y * z * cc - x * st]),
-                        Arr([z * x * cc - y * st,
-                             z * y * cc + x * st,
-                             ct + z.sq() * cc]))
+        Self::from_rows(A3(ct + x.sq() * cc,
+                           x * y * cc - z * st,
+                           x * z * cc + y * st),
+                        A3(y * x * cc + z * st,
+                           ct + y.sq() * cc,
+                           y * z * cc - x * st),
+                        A3(z * x * cc - y * st,
+                           z * y * cc + x * st,
+                           ct + z.sq() * cc))
     }
 
     #[inline(always)] pub fn from_frame(v: V) -> Self {
         let v2 = V(if F::abs(v[X]) > F::abs(v[Y]) {
-            Arr([-v[Z], 0., v[X]]) / F::sqrt(v[X].sq() + v[Z].sq())
+            A3(-v[Z], 0., v[X]) / F::sqrt(v[X].sq() + v[Z].sq())
         } else
-        { Arr([0., v[Z], -v[Y]]) / F::sqrt(v[Y].sq() + v[Z].sq()) });
+        { A3(0., v[Z], -v[Y]) / F::sqrt(v[Y].sq() + v[Z].sq()) });
         Self::from_cols(F3::from(v2), F3::from(v * v2), F3::from(v))
     }
 
@@ -49,9 +50,9 @@ impl RotScale3 {
 
     #[inline(always)] pub fn t(&self) -> Self {
         if let Some(m) = self.0 {
-            Self::from_rows(Arr([m[0_usize][0], m[1_usize][0], m[2_usize][0]]),
-                            Arr([m[0_usize][1], m[1_usize][1], m[2_usize][1]]),
-                            Arr([m[0_usize][2], m[1_usize][2], m[2_usize][2]]))
+            Self::from_rows(A3(m[0_usize][0], m[1_usize][0], m[2_usize][0]),
+                            A3(m[0_usize][1], m[1_usize][1], m[2_usize][1]),
+                            A3(m[0_usize][2], m[1_usize][2], m[2_usize][2]))
         } else { *self }
     }
 }
@@ -60,8 +61,10 @@ impl<A> Mul<A3<A>> for RotScale3
     where A: Copy + Zero + Add<Output = A> + Mul<F, Output = A>
 {
     type Output = A3<A>;
-    #[inline(always)] fn mul(self, o: A3<A>) -> A3<A>
-    { self.0.map(|m| A3::rep(o).zip(m, inner_product)).unwrap_or_else(|| o) }
+    #[inline(always)] fn mul(self, o: A3<A>) -> A3<A> {
+        self.0.map(|m| A3::rep(o).zip(m, A3::inner_product))
+              .unwrap_or_else(|| o)
+    }
 }
 
 impl Mul for RotScale3 {

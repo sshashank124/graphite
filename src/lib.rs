@@ -1,5 +1,5 @@
 #![feature(array_map)]
-#![feature(min_const_generics)]
+#![feature(const_fn)]
 
 mod core;
 mod geometry;

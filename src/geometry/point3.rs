@@ -15,8 +15,6 @@ op!(Mul::mul, *P ->  F -> P);
 op!(Mul::mul,  T -> *P -> P);
 op!(Div::div,  T -> *P -> P);
 
-impl From<[F; 3]> for P
-{ #[inline(always)] fn from(f3: [F; 3]) -> Self { Self(Arr(f3)) } }
 impl From<F3> for P { #[inline(always)] fn from(f3: F3) -> Self { Self(f3) } }
 impl From<P> for F3 { #[inline(always)] fn from(p: P) -> Self { p.0 } }
 
