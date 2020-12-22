@@ -186,8 +186,11 @@ impl F2 {
     #[inline(always)] pub fn max(self) -> F { self.reduce(F::max) }
 }
 
+impl<A> From<(A, A)> for A2<A>
+{ #[inline(always)] fn from(aa: (A, A)) -> A2<A> { A2(aa.0, aa.1) } }
+
 impl<A> From<A2<A>> for (A, A)
-{ #[inline(always)] fn from(a: A2<A>) -> (A, A) { (a.0, a.1) } }
+{ #[inline(always)] fn from(aa: A2<A>) -> (A, A) { (aa.0, aa.1) } }
 
 impl From<I2> for F2
 { fn from(ii: I2) -> Self { A2::map(ii, |i| i as F) } }
