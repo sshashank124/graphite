@@ -93,10 +93,17 @@ impl<A> A2<A> where A: Zero + One {
     }
 }
 
-impl<A> Zero for A2<A> where A: Zero { const ZERO: Self = A2::rep(A::ZERO); }
-impl<A> One for A2<A> where A: One { const ONE: Self = A2::rep(A::ONE); }
-impl<A> Half for A2<A> where A: Half { const HALF: Self = A2::rep(A::HALF); }
-impl<A> Two for A2<A> where A: Two { const TWO: Self = A2::rep(A::TWO); }
+impl<A> Zero for A2<A> where A: Copy + Zero
+{ const ZERO: Self = A2::rep(A::ZERO); }
+
+impl<A> One for A2<A> where A: Copy + One
+{ const ONE: Self = A2::rep(A::ONE); }
+
+impl<A> Half for A2<A> where A: Copy + Half
+{ const HALF: Self = A2::rep(A::HALF); }
+
+impl<A> Two for A2<A> where A: Copy + Two
+{ const TWO: Self = A2::rep(A::TWO); }
 
 macro_rules! index {
     ($type:ident[$v1:tt, $v2:tt]) => {

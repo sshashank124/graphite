@@ -2,14 +2,14 @@ use std::ops::*;
 
 use super::*;
 
-pub trait Zero: Copy { const ZERO: Self; }
-pub trait One: Copy { const ONE: Self; }
-pub trait Two: Copy { const TWO: Self; }
-pub trait Half: Copy { const HALF: Self; }
+pub trait Zero { const ZERO: Self; }
+pub trait One { const ONE: Self; }
+pub trait Two { const TWO: Self; }
+pub trait Half { const HALF: Self; }
 pub trait Inv { type Output; fn inv(self) -> Self; }
 pub trait Epsilon: Copy { const EPS: Self; }
 
-pub trait Num: PartialOrd + PartialEq
+pub trait Num: Copy + PartialOrd + PartialEq
              + Zero + One + Two + Neg<Output = Self>
              + Add<Self, Output = Self> + AddAssign<Self>
              + Sub<Self, Output = Self> + SubAssign<Self>
