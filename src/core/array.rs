@@ -20,7 +20,7 @@ pub type I2 = II<2>;
 pub struct Arr<A, const N: usize>(pub [A; N]);
 
 impl<A, const N: usize> Arr<A, N> {
-    #[inline]
+    #[inline(always)]
     pub fn from_iter<It>(it: It) -> Self where It: Iterator<Item=A> {
         let mut aa: [MaybeUninit<A>; N] = unsafe {
             MaybeUninit::uninit().assume_init()
@@ -31,55 +31,55 @@ impl<A, const N: usize> Arr<A, N> {
         Self(unsafe { aaptr.read() })
     }
 
-    #[inline]
+    #[inline(always)]
     pub fn zips<B, C>(self, b: B, f: impl Fn(A, B) -> C) -> Arr<C, N>
         where B: Copy
     { Arr(self.0.map(|x| f(x, b))) }
 
-    #[inline]
+    #[inline(always)]
     pub fn zipi<B>(&mut self, b: Arr<B, N>, f: impl Fn(&mut A, B))
         where B: Copy
     { self.0.iter_mut().zip(b.0.iter()).for_each(|(x, &y)| f(x, y)); }
 
-    #[inline]
+    #[inline(always)]
     pub fn zipsi<B>(&mut self, b: B, f: impl Fn(&mut A, B))
         where B: Copy
     { self.0.iter_mut().for_each(|x| f(x, b)); }
 }
 
-#[inline]
+#[inline(always)]
 pub fn map<A, AA, B, const N: usize>(a: AA, f: impl Fn(A) -> B) -> Arr<B, N>
     where AA: Into<Arr<A, N>>
 { Arr(a.into().0.map(f)) }
 
 impl<A, const N: usize> Arr<A, N> where A: Copy {
-    #[inline]
+    #[inline(always)]
     pub fn rep(a: A) -> Self { Self([a; N]) }
 
-    #[inline]
+    #[inline(always)]
     pub fn zip<B, C>(self, b: Arr<B, N>, f: impl Fn(A, B) -> C) -> Arr<C, N>
         where B: Copy
     { Arr::from_iter(self.0.iter().zip(b.0.iter()).map(|(&x, &y)| f(x, y))) }
 
-    #[inline]
+    #[inline(always)]
     pub fn fold<B>(self, acc: B, f: impl Fn(B, A) -> B) -> B
     { self.0.iter().fold(acc, |b, &a| f(b, a)) }
 
-    #[inline]
+    #[inline(always)]
     pub fn reduce(self, f: impl Fn(A, A) -> A) -> A {
         let mut it = self.0.iter();
         let first = it.next().unwrap();
         it.fold(*first, |b, &a| f(b, a))
     }
 
-    #[inline]
+    #[inline(always)]
     pub fn shl(self) -> Self {
         let mut aa = self.0.clone();
         aa.rotate_left(1);
         Self(aa)
     }
 
-    #[inline]
+    #[inline(always)]
     pub fn shr(self) -> Self {
         let mut aa = self.0.clone();
         aa.rotate_right(1);
@@ -88,7 +88,7 @@ impl<A, const N: usize> Arr<A, N> where A: Copy {
 }
 
 impl<A, const N: usize> Default for Arr<A, N> where A: Copy + Default
-{ #[inline] fn default() -> Self { Self::rep(A::default()) } }
+{ #[inline(always)] fn default() -> Self { Self::rep(A::default()) } }
 
 impl<A, const N: usize> Zero for Arr<A, N> where A: Zero
 { const ZERO: Self = Self([A::ZERO; N]); }
@@ -102,7 +102,7 @@ macro_rules! cw_unary_op {
             where A: $trait<Output = A>
         {
             type Output = Arr<A, N>;
-            #[inline] fn $op(self) -> Self::Output { map(self, $trait::$op) }
+            #[inline(always)] fn $op(self) -> Self::Output { map(self, $trait::$op) }
         }
     };
 }
@@ -117,7 +117,7 @@ macro_rules! cw_binary_op {
                   B: Copy
         {
             type Output = Arr<C, N>;
-            #[inline] fn $op(self, b: Arr<B, N>) -> Self::Output
+            #[inline(always)] fn $op(self, b: Arr<B, N>) -> Self::Output
             { self.zip(b, $trait::$op) }
         }
     };
@@ -137,7 +137,7 @@ macro_rules! cw_binary_assign_op {
             where A: $trait<B>,
                   B: Copy
         {
-            #[inline]
+            #[inline(always)]
             fn $op(&mut self, b: Arr<B, N>) { self.zipi(b, $trait::$op) }
         }
     };
@@ -158,7 +158,7 @@ macro_rules! scalar_binary_op {
                   S: Num
         {
             type Output = Arr<B, N>;
-            #[inline]
+            #[inline(always)]
             fn $op(self, s: S) -> Self::Output { self.zips(s, $trait::$op) }
         }
     };
@@ -177,7 +177,7 @@ macro_rules! scalar_binary_assign_op {
         impl<A, S, const N: usize> $trait<S> for Arr<A, N>
             where A: $trait<S>,
                   S: Num
-        { #[inline] fn $op(&mut self, s: S) { self.zipsi(s, $trait::$op) } }
+        { #[inline(always)] fn $op(&mut self, s: S) { self.zipsi(s, $trait::$op) } }
     };
 }
 scalar_binary_assign_op!(AddAssign::add_assign);
@@ -191,11 +191,11 @@ scalar_binary_assign_op!(RemAssign::rem_assign);
 
 impl<A, const N: usize> Index<I> for Arr<A, N> {
     type Output = A;
-    #[inline]
+    #[inline(always)]
     fn index(&self, i: I) -> &A { &self.0[i as usize] }
 }
 impl<A, const N: usize> IndexMut<I> for Arr<A, N>
-{ #[inline] fn index_mut(&mut self, i: I) -> &mut A { &mut self.0[i as usize] } }
+{ #[inline(always)] fn index_mut(&mut self, i: I) -> &mut A { &mut self.0[i as usize] } }
 
 impl<A, const N: usize> Index<usize> for Arr<A, N> {
     type Output = A;

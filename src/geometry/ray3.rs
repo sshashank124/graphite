@@ -10,24 +10,24 @@ pub struct R {
 }
 
 impl R {
-    #[inline] pub fn r(o: P, d: V, t: F) -> R { R { o, d, t } }
-    #[inline] pub fn unbounded(o: P, d: V) -> R
+    #[inline(always)] pub fn r(o: P, d: V, t: F) -> R { R { o, d, t } }
+    #[inline(always)] pub fn unbounded(o: P, d: V) -> R
     { R::r(o, d.unit(), F::POS_INF) }
-    #[inline] pub fn unit(o: P, d: V) -> R { R::r(o, d.unit(), d.norm()) }
-    #[inline] pub fn p2(a: P, b: P) -> R { R::unit(a, b - a) }
-    #[inline] pub fn at(&self, t: F) -> P { self.o + self.d * t }
-    #[inline] pub fn clipped(self, t: F) -> R { R::r(self.o, self.d, t) }
-    #[inline] pub fn range(&self) -> B { B::b(F::EPS, self.t - F::EPS) }
+    #[inline(always)] pub fn unit(o: P, d: V) -> R { R::r(o, d.unit(), d.norm()) }
+    #[inline(always)] pub fn p2(a: P, b: P) -> R { R::unit(a, b - a) }
+    #[inline(always)] pub fn at(&self, t: F) -> P { self.o + self.d * t }
+    #[inline(always)] pub fn clipped(self, t: F) -> R { R::r(self.o, self.d, t) }
+    #[inline(always)] pub fn range(&self) -> B { B::b(F::EPS, self.t - F::EPS) }
 }
 
 impl Mul<R> for T {
     type Output = R;
-    #[inline] fn mul(self, R { o, d, t }: R) -> R
+    #[inline(always)] fn mul(self, R { o, d, t }: R) -> R
     { R::r(self * o, self * d, t) }
 }
 
 impl Div<R> for T {
     type Output = R;
-    #[inline] fn div(self, R { o, d, t }: R) -> R
+    #[inline(always)] fn div(self, R { o, d, t }: R) -> R
     { R::r(self / o, self / d, t) }
 }
