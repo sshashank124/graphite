@@ -35,6 +35,9 @@ impl<A> A3<A> {
         where B: Copy,
     { f(&mut self.0, b); f(&mut self.1, b); f(&mut self.2, b); }
 
+    #[inline(always)] pub fn fold<B>(self, b: B, f: impl Fn(B, A) -> B) -> B
+    { f(f(f(b, self.0), self.1), self.2) }
+
     #[inline(always)] pub fn reduce(self, f: impl Fn(A, A) -> A) -> A
     { f(f(self.0, self.1), self.2) }
 
