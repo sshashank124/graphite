@@ -4,7 +4,7 @@ use std::ops::*;
 use super::*;
 use crate::op;
 
-#[derive(Clone, Copy, Debug, Deserialize, PartialEq)]
+#[derive(Clone, Copy, Debug, Default, PartialEq, Deserialize)]
 pub struct Color(F3);
 
 impl Zero for Color { const ZERO: Self = Self(F3::ZERO); }

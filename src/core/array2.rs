@@ -11,7 +11,7 @@ use crate::{
 pub type F2 = A2<F>;
 pub type I2 = A2<I>;
 
-#[derive(Clone, Copy, Debug, Deserialize, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Default, Deserialize, Eq, PartialEq)]
 pub struct A2<A>(pub A, pub A);
 
 // General Arrays
@@ -67,9 +67,6 @@ impl<A> A2<A>
 
 impl<A> A2<A> where A: Mul<Output = A>
 { #[inline(always)] pub fn product(self) -> A { self.reduce(Mul::mul) } }
-
-impl<A> Default for A2<A> where A: Copy + Default
-{ #[inline(always)] fn default() -> Self { Self::rep(A::default()) } }
 
 impl<A> Sum for A2<A> where Self: Zero + Add<Output=Self> {
     #[inline(always)] fn sum<It>(it: It) -> Self where It: Iterator<Item=Self>

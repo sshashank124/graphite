@@ -10,7 +10,7 @@ use crate::{
 
 pub type F3 = A3<F>;
 
-#[derive(Clone, Copy, Debug, Deserialize, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Default, Deserialize, Eq, PartialEq)]
 pub struct A3<A>(pub A, pub A, pub A);
 
 // General Arrays
@@ -73,9 +73,6 @@ impl<A> A3<A>
 
 impl<A> A3<A> where A: Mul<Output = A>
 { #[inline(always)] pub fn product(self) -> A { self.reduce(Mul::mul) } }
-
-impl<A> Default for A3<A> where A: Copy + Default
-{ #[inline(always)] fn default() -> Self { Self::rep(A::default()) } }
 
 impl<A> Sum for A3<A> where Self: Zero + Add<Output=Self> {
     #[inline(always)] fn sum<It>(it: It) -> Self where It: Iterator<Item=Self>
