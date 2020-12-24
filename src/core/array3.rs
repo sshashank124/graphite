@@ -10,7 +10,7 @@ use crate::{
 
 pub type F3 = A3<F>;
 
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Deserialize, Eq, PartialEq)]
 pub struct A3<A>(pub A, pub A, pub A);
 
 // General Arrays
@@ -198,3 +198,14 @@ impl<A> From<(A, A, A)> for A3<A>
 
 impl<A> From<A3<A>> for (A, A, A)
 { #[inline(always)] fn from(aa: A3<A>) -> (A, A, A) { (aa.0, aa.1, aa.2) } }
+
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test] fn f3() {
+        assert_eq!(serde_json::from_str::<F3>("[-1, 1, 0.5]").unwrap(),
+                   A3(-1., 1., 0.5));
+    }
+}

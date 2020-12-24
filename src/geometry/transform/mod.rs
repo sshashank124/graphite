@@ -11,15 +11,13 @@ pub use TransformPair3 as T;
 
 type T3 = affine3::Affine3;
 
-#[derive(Clone, Copy, Debug, Default, PartialEq)]
+#[derive(Clone, Copy, Debug, Default, PartialEq, Deserialize)]
 pub struct TransformPair3 {
     f: T3,
     i: T3,
 }
 
-impl One for TransformPair3 {
-    const ONE: Self = Self::new(T3::ONE, T3::ONE);
-}
+impl One for TransformPair3 { const ONE: Self = Self::new(T3::ONE, T3::ONE); }
 
 impl TransformPair3 {
     #[inline(always)] const fn new(f: T3, i: T3) -> Self { Self { f, i } }
@@ -44,7 +42,8 @@ impl TransformPair3 {
     #[inline(always)] pub fn rot(&self) -> Self
     { Self::new(self.f.rot(), self.i.rot()) }
 
-    #[inline(always)] pub fn t(&self) -> Self { Self::new(self.f.t(), self.i.t()) }
+    #[inline(always)] pub fn t(&self) -> Self
+    { Self::new(self.f.t(), self.i.t()) }
 }
 
 impl Inv for TransformPair3 {

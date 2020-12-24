@@ -11,7 +11,7 @@ use crate::{
 pub type F2 = A2<F>;
 pub type I2 = A2<I>;
 
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Deserialize, Eq, PartialEq)]
 pub struct A2<A>(pub A, pub A);
 
 // General Arrays
@@ -203,3 +203,15 @@ impl From<A2<usize>> for I2
 
 impl From<I2> for A2<usize>
 { fn from(ii: I2) -> Self { A2::map(ii, |i| i as usize) } }
+
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test] fn i2()
+    { assert_eq!(serde_json::from_str::<I2>("[-1, 1]").unwrap(), A2(-1, 1)); }
+
+    #[test] fn f2()
+    { assert_eq!(serde_json::from_str::<F2>("[-1, 1]").unwrap(), A2(-1., 1.)); }
+}

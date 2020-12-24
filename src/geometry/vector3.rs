@@ -3,7 +3,7 @@ use std::ops::{Add, Div, Index, Mul, Neg, Sub};
 use super::*;
 use crate::op;
 
-#[derive(Clone, Copy, Debug, PartialEq)]
+#[derive(Clone, Copy, Debug, PartialEq, Deserialize)]
 pub struct V(pub(crate) F3);
 
 impl Zero for V { const ZERO: Self = V(F3::ZERO); }
@@ -47,4 +47,15 @@ impl From<V> for F3 { #[inline(always)] fn from(v: V) -> Self { v.0 } }
 impl Index<Dim> for V {
     type Output = F;
     #[inline(always)] fn index(&self, dim: Dim) -> &F { &self.0[dim] }
+}
+
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test] fn v() {
+        assert_eq!(serde_json::from_str::<V>("[-1, 1, 0.5]").unwrap(),
+                   V(A3(-1., 1., 0.5)));
+    }
 }

@@ -1,7 +1,7 @@
 use super::*;
 use rotscale3::RotScale3;
 
-#[derive(Clone, Copy, Debug, Default, PartialEq)]
+#[derive(Clone, Copy, Debug, Default, PartialEq, Deserialize)]
 pub struct Affine3 {
     r: RotScale3,
     t: Option<F3>,

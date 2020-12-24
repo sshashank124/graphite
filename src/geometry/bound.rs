@@ -3,7 +3,7 @@ use std::ops::{Add, BitAnd, BitOr, Div, Index, Mul, Sub};
 use super::*;
 use crate::op;
 
-#[derive(Clone, Copy, Debug, PartialEq)]
+#[derive(Clone, Copy, Debug, PartialEq, Deserialize)]
 pub struct B(pub(crate) F2);
 
 impl Zero for B { const ZERO: Self = B::b(F::POS_INF, F::NEG_INF); }
@@ -58,4 +58,15 @@ impl BitAnd for B {
 impl Index<usize> for B {
     type Output = F;
     #[inline(always)] fn index(&self, i: usize) -> &F { &self.0[i] }
+}
+
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test] fn b() {
+        assert_eq!(serde_json::from_str::<B>("[-1, 1]").unwrap(),
+                   B::b(-1., 1.));
+    }
 }

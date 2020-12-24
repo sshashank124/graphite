@@ -1,6 +1,6 @@
 use super::*;
 
-#[derive(Clone, Copy, Debug, PartialEq)]
+#[derive(Clone, Copy, Debug, PartialEq, Deserialize)]
 pub struct RotScale3(Option<A3<F3>>);
 
 impl One for RotScale3 { const ONE: Self = Self(None); }
@@ -36,8 +36,7 @@ impl RotScale3 {
     #[inline(always)] pub fn from_frame(v: V) -> Self {
         let v2 = V(if F::abs(v[X]) > F::abs(v[Y]) {
             A3(-v[Z], 0., v[X]) / F::sqrt(v[X].sq() + v[Z].sq())
-        } else
-        { A3(0., v[Z], -v[Y]) / F::sqrt(v[Y].sq() + v[Z].sq()) });
+        } else { A3(0., v[Z], -v[Y]) / F::sqrt(v[Y].sq() + v[Z].sq()) });
         Self::from_cols(F3::from(v2), F3::from(v * v2), F3::from(v))
     }
 

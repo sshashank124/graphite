@@ -3,7 +3,7 @@ use std::ops::{Add, BitAnd, BitOr, Div, Index, Mul, Sub};
 use super::*;
 use crate::op;
 
-#[derive(Clone, Copy, Debug)]
+#[derive(Clone, Copy, Debug, PartialEq, Deserialize)]
 pub struct BBox(pub A3<B>);
 
 impl Zero for BBox { const ZERO: Self = BBox(A3::ZERO); }
@@ -33,4 +33,16 @@ op!(Div::div, T -> *BBox -> BBox);
 impl Index<Dim> for BBox {
     type Output = B;
     #[inline(always)] fn index(&self, dim: Dim) -> &B { &self.0[dim] }
+}
+
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test] fn bbox() {
+        let s = "[[-1, 1], [2, 10], [0.5, -0.5]]";
+        assert_eq!(serde_json::from_str::<BBox>(s).unwrap(),
+                   BBox(A3(B::b(-1., 1.), B::b(2., 10.), B::b(0.5, -0.5))));
+    }
 }

@@ -4,7 +4,7 @@ use std::ops::*;
 use super::*;
 use crate::op;
 
-#[derive(Clone, Copy, Debug, PartialEq)]
+#[derive(Clone, Copy, Debug, Deserialize, PartialEq)]
 pub struct Color(F3);
 
 impl Zero for Color { const ZERO: Self = Self(F3::ZERO); }
@@ -48,4 +48,15 @@ impl Product for Color {
     #[inline(always)]
     fn product<It>(it: It) -> Self where It: Iterator<Item=Self>
     { Color(it.map(|i| i.0).product()) }
+}
+
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test] fn rgb() {
+        assert_eq!(serde_json::from_str::<Color>("[-1, 0.5, 1]").unwrap(),
+                   Color(A3(-1., 0.5, 1.)));
+    }
 }

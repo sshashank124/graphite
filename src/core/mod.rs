@@ -7,6 +7,8 @@ mod num;
 mod ops;
 mod scalar;
 
+pub use serde::Deserialize;
+
 pub use array2::*;
 pub use array3::*;
 pub use color::*;
