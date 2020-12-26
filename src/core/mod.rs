@@ -7,7 +7,7 @@ mod num;
 mod ops;
 mod scalar;
 
-pub use serde::Deserialize;
+pub(crate) use serde::Deserialize;
 
 pub use array2::*;
 pub use array3::*;
