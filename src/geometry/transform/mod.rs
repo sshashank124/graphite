@@ -44,6 +44,10 @@ impl TransformPair3 {
 
     #[inline(always)] pub fn t(&self) -> Self
     { Self::new(self.f.t(), self.i.t()) }
+
+    #[inline(always)]
+    pub fn product<It>(it: It) -> Self where It: DoubleEndedIterator<Item=Self>
+    { it.rev().fold(Self::ONE, Mul::mul) }
 }
 
 impl Inv for TransformPair3 {
