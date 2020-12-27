@@ -2,7 +2,7 @@ mod affine3;
 mod normalization2;
 mod rotscale3;
 
-use std::ops::{Add, Div, Mul};
+use std::ops::{Add, Div, Mul, Neg};
 
 use super::*;
 
@@ -22,16 +22,19 @@ impl One for TransformPair3 { const ONE: Self = Self::new(T3::ONE, T3::ONE); }
 impl TransformPair3 {
     #[inline(always)] const fn new(f: T3, i: T3) -> Self { Self { f, i } }
 
-    #[inline(always)] pub fn translate(v: F3) -> Self
+    #[inline(always)] pub fn translate<A>(v: A) -> Self
+        where A: Copy + Neg<Output=A> + Into<F3>
     { Self::new(T3::translate(v), T3::translate(-v)) }
 
-    #[inline(always)] pub fn scale(v: F3) -> Self
+    #[inline(always)] pub fn scale<A>(v: A) -> Self
+        where A: Copy + Inv + Into<F3>
     { Self::new(T3::scale(v), T3::scale(v.inv())) }
 
-    #[inline(always)] pub fn rotate(axis: F3, theta: F) -> Self
+    #[inline(always)] pub fn rotate<A>(axis: A, theta: F) -> Self
+        where A: Copy + Into<F3>
     { Self::new(T3::rotate(axis, theta), T3::rotate(axis, -theta)) }
 
-    #[inline(always)] pub fn from_frame(v: V) -> Self {
+    #[inline(always)] pub fn from_frame<A: Into<F3>>(v: A) -> Self {
         let t = T3::from_frame(v);
         Self::new(t, t.t())
     }

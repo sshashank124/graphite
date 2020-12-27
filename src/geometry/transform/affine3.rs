@@ -10,16 +10,19 @@ pub struct Affine3 {
 impl One for Affine3 { const ONE: Self = Self::new(RotScale3::ONE, None); }
 
 impl Affine3 {
-    #[inline(always)] pub const fn new(r: RotScale3, t: Option<F3>) -> Self { Self { r, t } }
+    #[inline(always)] pub const fn new(r: RotScale3, t: Option<F3>) -> Self
+    { Self { r, t } }
 
-    #[inline(always)] pub fn translate(t: F3) -> Self { Self::new(RotScale3::ONE, Some(t)) }
-    #[inline(always)] pub fn scale(s: F3) -> Self
+    #[inline(always)] pub fn translate<A: Into<F3>>(t: A) -> Self
+    { Self::new(RotScale3::ONE, Some(t.into())) }
+
+    #[inline(always)] pub fn scale<A: Into<F3>>(s: A) -> Self
     { Self::new(RotScale3::scale(s), None) }
 
-    #[inline(always)] pub fn rotate(axis: F3, theta: F) -> Self
+    #[inline(always)] pub fn rotate<A: Into<F3>>(axis: A, theta: F) -> Self
     { Self::new(RotScale3::rotate(axis, theta), None) }
 
-    #[inline(always)] pub fn from_frame(v: V) -> Self
+    #[inline(always)] pub fn from_frame<A: Into<F3>>(v: A) -> Self
     { Self::new(RotScale3::from_frame(v), None) }
 
     #[inline(always)] pub fn look_at(pos: P, target: P, up: V) -> Self
