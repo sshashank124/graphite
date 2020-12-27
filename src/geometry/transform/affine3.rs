@@ -19,14 +19,14 @@ impl Affine3 {
     #[inline(always)] pub fn scale<A: Into<F3>>(s: A) -> Self
     { Self::new(RotScale3::scale(s), None) }
 
-    #[inline(always)] pub fn rotate<A: Into<F3>>(axis: A, theta: F) -> Self
-    { Self::new(RotScale3::rotate(axis, theta), None) }
-
-    #[inline(always)] pub fn from_frame<A: Into<F3>>(v: A) -> Self
-    { Self::new(RotScale3::from_frame(v), None) }
+    #[inline(always)] pub fn rotate<A: Into<F3>>(axis: A, angle: F) -> Self
+    { Self::new(RotScale3::rotate(axis, angle), None) }
 
     #[inline(always)] pub fn look_at(pos: P, target: P, up: V) -> Self
     { Self::new(RotScale3::look_at(target - pos, up), Some(pos.0)) }
+
+    #[inline(always)] pub fn from_frame<A: Into<F3>>(v: A) -> Self
+    { Self::new(RotScale3::from_frame(v), None) }
 
     #[inline(always)] pub fn rot(&self) -> Self { Self::new(self.r, None) }
     #[inline(always)] pub fn t(&self) -> Self { Self::new(self.r.t(), None) }

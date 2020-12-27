@@ -17,11 +17,11 @@ impl RotScale3 {
     #[inline(always)] pub fn scale<A: Into<F3>>(s: A) -> Self
     { Self(Some(XYZ.map(F3::basis) * s.into())) }
 
-    #[inline(always)] pub fn rotate<A: Into<F3>>(axis: A, theta: F) -> Self {
+    #[inline(always)] pub fn rotate<A: Into<F3>>(axis: A, angle: F) -> Self {
         let A3(x, y, z) = F3::from(V(axis.into()).unit());
-        let ct = theta.cosd();
+        let ct = angle.cosd();
         let cc = 1. - ct;
-        let st = theta.sind();
+        let st = angle.sind();
         Self::from_rows(A3(ct + x.sq() * cc,
                            x * y * cc - z * st,
                            x * z * cc + y * st),
@@ -33,19 +33,19 @@ impl RotScale3 {
                            ct + z.sq() * cc))
     }
 
+    #[inline(always)] pub fn look_at(dir: V, up: V) -> Self {
+        let dir = dir.unit();
+        let right = (up.unit() * dir).unit();
+        let up = (dir * right).unit();
+        Self::from_cols(F3::from(right), F3::from(up), F3::from(dir))
+    }
+
     #[inline(always)] pub fn from_frame<A: Into<F3>>(v: A) -> Self {
         let v = V(v.into());
         let v2 = V(if F::abs(v[X]) > F::abs(v[Y]) {
             A3(-v[Z], 0., v[X]) / F::sqrt(v[X].sq() + v[Z].sq())
         } else { A3(0., v[Z], -v[Y]) / F::sqrt(v[Y].sq() + v[Z].sq()) });
         Self::from_cols(F3::from(v2), F3::from(v * v2), F3::from(v))
-    }
-
-    #[inline(always)] pub fn look_at(dir: V, up: V) -> Self {
-        let dir = dir.unit();
-        let right = (up.unit() * dir).unit();
-        let up = (dir * right).unit();
-        Self::from_cols(F3::from(right), F3::from(up), F3::from(dir))
     }
 
     #[inline(always)] pub fn t(&self) -> Self {

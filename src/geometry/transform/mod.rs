@@ -12,6 +12,7 @@ pub use TransformPair3 as T;
 type T3 = affine3::Affine3;
 
 #[derive(Clone, Copy, Debug, Default, PartialEq, Deserialize)]
+#[serde(from="TransformPair3Config")]
 pub struct TransformPair3 {
     f: T3,
     i: T3,
@@ -30,17 +31,17 @@ impl TransformPair3 {
         where A: Copy + Inv + Into<F3>
     { Self::new(T3::scale(v), T3::scale(v.inv())) }
 
-    #[inline(always)] pub fn rotate<A>(axis: A, theta: F) -> Self
+    #[inline(always)] pub fn rotate<A>(axis: A, angle: F) -> Self
         where A: Copy + Into<F3>
-    { Self::new(T3::rotate(axis, theta), T3::rotate(axis, -theta)) }
+    { Self::new(T3::rotate(axis, angle), T3::rotate(axis, -angle)) }
+
+    #[inline(always)] pub fn look_at(pos: P, target: P, up: V) -> Self
+    { Self::new(T3::look_at(pos, target, up), T3::ONE) }
 
     #[inline(always)] pub fn from_frame<A: Into<F3>>(v: A) -> Self {
         let t = T3::from_frame(v);
         Self::new(t, t.t())
     }
-
-    #[inline(always)] pub fn look_at(pos: P, target: P, up: V) -> Self
-    { Self::new(T3::look_at(pos, target, up), T3::ONE) }
 
     #[inline(always)] pub fn rot(&self) -> Self
     { Self::new(self.f.rot(), self.i.rot()) }
@@ -78,4 +79,68 @@ impl<A> Div<A3<A>> for TransformPair3
 {
     type Output = A3<A>;
     #[inline(always)] fn div(self, v: A3<A>) -> A3<A> { self.i * v }
+}
+
+
+#[derive(Debug, Deserialize)]
+#[serde(rename_all="snake_case")]
+enum TransformPair3Config {
+    Translate(F3),
+    Scale(F3),
+    Rotate {
+        axis: F3,
+        angle: F,
+    },
+    LookAt {
+        pos: P,
+        target: P,
+        up: V,
+    },
+}
+
+impl From<TransformPair3Config> for TransformPair3 {
+    fn from(tc: TransformPair3Config) -> Self {
+        match tc {
+            TransformPair3Config::Translate(v) => Self::translate(v),
+            TransformPair3Config::Scale(s) => Self::scale(s),
+            TransformPair3Config::Rotate { axis, angle }
+                => Self::rotate(axis, angle),
+            TransformPair3Config::LookAt { pos, target, up }
+                => Self::look_at(pos, target, up),
+        }
+    }
+}
+
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test] fn translate() {
+        let s = r#"{ "translate": [1, -2, 0.5] }"#;
+        assert_eq!(serde_json::from_str::<TransformPair3>(s).unwrap(),
+                   TransformPair3::translate(A3(1., -2., 0.5)));
+    }
+
+    #[test] fn scale() {
+        let s = r#"{ "scale": [1, -2, 0.5] }"#;
+        assert_eq!(serde_json::from_str::<TransformPair3>(s).unwrap(),
+                   TransformPair3::scale(A3(1., -2., 0.5)));
+    }
+
+    #[test] fn rotate() {
+        let s = r#"{ "rotate": { "axis": [1, -2, 0.5], "angle": 50 } }"#;
+        assert_eq!(serde_json::from_str::<TransformPair3>(s).unwrap(),
+                   TransformPair3::rotate(A3(1., -2., 0.5), 50.));
+    }
+
+    #[test] fn look_at() {
+        let s = r#"{ "look_at": { "pos": [1, -2, 0.5],
+                                  "target": [100, 4, -10],
+                                  "up": [0, 1, 1] } }"#;
+        assert_eq!(serde_json::from_str::<TransformPair3>(s).unwrap(),
+                   TransformPair3::look_at(P(A3(1., -2., 0.5)),
+                                           P(A3(100., 4., -10.)),
+                                           V(A3(0., 1., 1.))));
+    }
 }
