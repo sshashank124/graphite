@@ -3,7 +3,7 @@ use std::ops::{Add, BitAnd, BitOr, Div, Index, Mul, Sub};
 use super::*;
 use crate::op;
 
-#[derive(Clone, Copy, Debug, PartialEq, Deserialize)]
+#[derive(Clone, Copy, Debug, PartialEq, Deserialize, Serialize)]
 pub struct BBox(pub A3<B>);
 
 impl Zero for BBox { const ZERO: Self = BBox(A3::ZERO); }

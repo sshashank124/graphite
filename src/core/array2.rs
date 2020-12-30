@@ -11,7 +11,7 @@ use crate::{
 pub type F2 = A2<F>;
 pub type I2 = A2<I>;
 
-#[derive(Clone, Copy, Debug, Default, Deserialize, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Default, Eq, PartialEq, Deserialize, Serialize)]
 pub struct A2<A>(pub A, pub A);
 
 // General Arrays

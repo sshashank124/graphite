@@ -2,7 +2,7 @@ use std::ops::{Div, Mul};
 
 use super::*;
 
-#[derive(Clone, Copy, Debug, PartialEq, Deserialize)]
+#[derive(Clone, Copy, Debug, PartialEq, Deserialize, Serialize)]
 pub struct R {
     pub o: P,
     pub d: V,

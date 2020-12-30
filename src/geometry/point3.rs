@@ -3,7 +3,7 @@ use std::ops::{Add, Div, Index, Mul, Sub};
 use super::*;
 use crate::op;
 
-#[derive(Clone, Copy, Debug, PartialEq, Deserialize)]
+#[derive(Clone, Copy, Debug, PartialEq, Deserialize, Serialize)]
 pub struct P(pub(crate) F3);
 
 impl Zero for P { const ZERO: P = P(F3::ZERO); }

@@ -10,7 +10,7 @@ use crate::{
 
 pub type F3 = A3<F>;
 
-#[derive(Clone, Copy, Debug, Default, Deserialize, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Default, Eq, PartialEq, Deserialize, Serialize)]
 pub struct A3<A>(pub A, pub A, pub A);
 
 // General Arrays

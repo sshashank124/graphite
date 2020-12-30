@@ -3,7 +3,7 @@ use std::ops::{Add, BitAnd, BitOr, Div, Index, Mul, Sub};
 use super::*;
 use crate::op;
 
-#[derive(Clone, Copy, Debug, PartialEq, Deserialize)]
+#[derive(Clone, Copy, Debug, PartialEq, Deserialize, Serialize)]
 pub struct B(pub(crate) F2);
 
 impl Zero for B { const ZERO: Self = B::b(F::POS_INF, F::NEG_INF); }

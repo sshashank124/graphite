@@ -3,7 +3,7 @@ use std::ops::{Add, Div, Index, Mul, Neg};
 use super::*;
 use crate::op;
 
-#[derive(Clone, Copy, Debug, PartialEq, Deserialize)]
+#[derive(Clone, Copy, Debug, PartialEq, Deserialize, Serialize)]
 pub struct N(pub(crate) V);
 
 impl Zero for N { const ZERO: Self = N(V::ZERO); }
