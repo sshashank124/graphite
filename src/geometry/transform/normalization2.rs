@@ -2,6 +2,7 @@ use super::*;
 
 #[derive(Clone, Copy, Debug, PartialEq)]
 #[cfg_attr(feature="serde-derive", derive(Deserialize))]
+#[repr(C)]
 pub struct Norm2 {
     s: F2,
     t: F2,

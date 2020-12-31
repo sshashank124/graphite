@@ -5,6 +5,7 @@ use crate::op;
 
 #[derive(Clone, Copy, Debug, PartialEq)]
 #[cfg_attr(feature="serde-derive", derive(Deserialize, Serialize))]
+#[repr(C)]
 pub struct N(pub(crate) V);
 
 impl Zero for N { const ZERO: Self = N(V::ZERO); }

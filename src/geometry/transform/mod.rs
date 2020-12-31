@@ -14,6 +14,7 @@ type T3 = affine3::Affine3;
 #[derive(Clone, Copy, Debug, Default, PartialEq)]
 #[cfg_attr(feature="serde-derive", derive(Deserialize))]
 #[cfg_attr(feature="serde-derive", serde(from="TransformPair3Config"))]
+#[repr(C)]
 pub struct TransformPair3 {
     f: T3,
     i: T3,

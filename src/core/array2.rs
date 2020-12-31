@@ -13,6 +13,7 @@ pub type I2 = A2<I>;
 
 #[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
 #[cfg_attr(feature="serde-derive", derive(Deserialize, Serialize))]
+#[repr(C)]
 pub struct A2<A>(pub A, pub A);
 
 // General Arrays

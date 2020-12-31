@@ -12,6 +12,7 @@ pub type F3 = A3<F>;
 
 #[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
 #[cfg_attr(feature="serde-derive", derive(Deserialize, Serialize))]
+#[repr(C)]
 pub struct A3<A>(pub A, pub A, pub A);
 
 // General Arrays

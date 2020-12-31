@@ -6,6 +6,7 @@ use crate::op;
 
 #[derive(Clone, Copy, Debug, Default, PartialEq)]
 #[cfg_attr(feature="serde-derive", derive(Deserialize, Serialize))]
+#[repr(C)]
 pub struct Color(F3);
 
 impl Zero for Color { const ZERO: Self = Self(F3::ZERO); }

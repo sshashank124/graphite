@@ -3,6 +3,7 @@ use rotscale3::RotScale3;
 
 #[derive(Clone, Copy, Debug, Default, PartialEq)]
 #[cfg_attr(feature="serde-derive", derive(Deserialize))]
+#[repr(C)]
 pub struct Affine3 {
     r: RotScale3,
     t: Option<F3>,

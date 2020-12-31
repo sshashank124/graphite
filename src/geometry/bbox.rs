@@ -5,6 +5,7 @@ use crate::op;
 
 #[derive(Clone, Copy, Debug, PartialEq)]
 #[cfg_attr(feature="serde-derive", derive(Deserialize, Serialize))]
+#[repr(C)]
 pub struct BBox(pub A3<B>);
 
 impl Zero for BBox { const ZERO: Self = BBox(A3::ZERO); }
