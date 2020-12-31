@@ -1,6 +1,7 @@
 use super::*;
 
-#[derive(Clone, Copy, Debug, PartialEq, Deserialize)]
+#[derive(Clone, Copy, Debug, PartialEq)]
+#[cfg_attr(feature="serde-derive", derive(Deserialize))]
 pub struct RotScale3(Option<A3<F3>>);
 
 impl One for RotScale3 { const ONE: Self = Self(None); }

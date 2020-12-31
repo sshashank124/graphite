@@ -4,11 +4,12 @@ version = "0.1.0"
 authors = ["Shashank Singh <sshashank124@gmail.com>"]
 edition = "2018"
 
+[features]
+f64 = []
+serde-derive = ["serde"]
+
 [dependencies]
-serde = { version = "*", features = ["derive"] }
+serde = { version = "*", features = ["derive"], optional = true }
 
 [dev-dependencies]
 serde_json = "*"
-
-[features]
-f64 = []

@@ -3,7 +3,8 @@ use std::ops::{Add, BitAnd, BitOr, Div, Index, Mul, Sub};
 use super::*;
 use crate::op;
 
-#[derive(Clone, Copy, Debug, PartialEq, Deserialize, Serialize)]
+#[derive(Clone, Copy, Debug, PartialEq)]
+#[cfg_attr(feature="serde-derive", derive(Deserialize, Serialize))]
 pub struct BBox(pub A3<B>);
 
 impl Zero for BBox { const ZERO: Self = BBox(A3::ZERO); }
@@ -36,6 +37,7 @@ impl Index<Dim> for BBox {
 }
 
 
+#[cfg(feature="serde-derive")]
 #[cfg(test)]
 mod tests {
     use super::*;

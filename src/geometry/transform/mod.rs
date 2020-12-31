@@ -11,8 +11,9 @@ pub use TransformPair3 as T;
 
 type T3 = affine3::Affine3;
 
-#[derive(Clone, Copy, Debug, Default, PartialEq, Deserialize)]
-#[serde(from="TransformPair3Config")]
+#[derive(Clone, Copy, Debug, Default, PartialEq)]
+#[cfg_attr(feature="serde-derive", derive(Deserialize))]
+#[cfg_attr(feature="serde-derive", serde(from="TransformPair3Config"))]
 pub struct TransformPair3 {
     f: T3,
     i: T3,
@@ -82,6 +83,7 @@ impl<A> Div<A3<A>> for TransformPair3
 }
 
 
+#[cfg(feature="serde-derive")]
 #[derive(Debug, Deserialize)]
 #[serde(rename_all="snake_case")]
 enum TransformPair3Config {
@@ -98,6 +100,7 @@ enum TransformPair3Config {
     },
 }
 
+#[cfg(feature="serde-derive")]
 impl From<TransformPair3Config> for TransformPair3 {
     fn from(tc: TransformPair3Config) -> Self {
         match tc {
@@ -112,6 +115,7 @@ impl From<TransformPair3Config> for TransformPair3 {
 }
 
 
+#[cfg(feature="serde-derive")]
 #[cfg(test)]
 mod tests {
     use super::*;

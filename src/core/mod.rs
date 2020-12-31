@@ -7,6 +7,7 @@ mod num;
 mod ops;
 mod scalar;
 
+#[cfg(feature="serde-derive")]
 pub(crate) use serde::{Deserialize, Serialize};
 
 pub use array2::*;

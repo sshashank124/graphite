@@ -2,13 +2,16 @@ use std::ops::{Add, Mul};
 
 use super::*;
 
-#[derive(Clone, Copy, Debug, Deserialize, Serialize)]
+#[derive(Clone, Copy, Debug)]
+#[cfg_attr(feature="serde-derive", derive(Deserialize, Serialize))]
 pub struct LinearScale;
 
-#[derive(Clone, Copy, Debug, Deserialize, Serialize)]
+#[derive(Clone, Copy, Debug)]
+#[cfg_attr(feature="serde-derive", derive(Deserialize, Serialize))]
 pub struct PowerScale;
 
-#[derive(Clone, Copy, Debug, Deserialize, Serialize)]
+#[derive(Clone, Copy, Debug)]
+#[cfg_attr(feature="serde-derive", derive(Deserialize, Serialize))]
 pub struct SmoothScale;
 
 pub trait Interp<A> {

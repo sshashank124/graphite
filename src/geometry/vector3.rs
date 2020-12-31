@@ -3,7 +3,8 @@ use std::ops::{Add, Div, Index, Mul, Neg, Sub};
 use super::*;
 use crate::op;
 
-#[derive(Clone, Copy, Debug, PartialEq, Deserialize, Serialize)]
+#[derive(Clone, Copy, Debug, PartialEq)]
+#[cfg_attr(feature="serde-derive", derive(Deserialize, Serialize))]
 pub struct V(pub(crate) F3);
 
 impl Zero for V { const ZERO: Self = V(F3::ZERO); }
@@ -50,6 +51,7 @@ impl Index<Dim> for V {
 }
 
 
+#[cfg(feature="serde-derive")]
 #[cfg(test)]
 mod tests {
     use super::*;

@@ -11,7 +11,8 @@ impl Two for F { const TWO: Self = 2.; }
 impl Half for F { const HALF: Self = 0.5; }
 impl Num for F { }
 
-impl Inv for F { type Output = F; #[inline(always)] fn inv(self) -> F { self.recip() } }
+impl Inv for F
+{ type Output = F; #[inline(always)] fn inv(self) -> F { self.recip() } }
 impl Epsilon for f32 { const EPS: Self = 1e-4; }
 impl Epsilon for f64 { const EPS: Self = 1e-6; }
 

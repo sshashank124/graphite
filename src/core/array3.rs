@@ -10,7 +10,8 @@ use crate::{
 
 pub type F3 = A3<F>;
 
-#[derive(Clone, Copy, Debug, Default, Eq, PartialEq, Deserialize, Serialize)]
+#[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
+#[cfg_attr(feature="serde-derive", derive(Deserialize, Serialize))]
 pub struct A3<A>(pub A, pub A, pub A);
 
 // General Arrays
@@ -197,6 +198,7 @@ impl<A> From<A3<A>> for (A, A, A)
 { #[inline(always)] fn from(aa: A3<A>) -> (A, A, A) { (aa.0, aa.1, aa.2) } }
 
 
+#[cfg(feature="serde-derive")]
 #[cfg(test)]
 mod tests {
     use super::*;

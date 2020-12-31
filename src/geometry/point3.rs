@@ -3,7 +3,8 @@ use std::ops::{Add, Div, Index, Mul, Sub};
 use super::*;
 use crate::op;
 
-#[derive(Clone, Copy, Debug, PartialEq, Deserialize, Serialize)]
+#[derive(Clone, Copy, Debug, PartialEq)]
+#[cfg_attr(feature="serde-derive", derive(Deserialize, Serialize))]
 pub struct P(pub(crate) F3);
 
 impl Zero for P { const ZERO: P = P(F3::ZERO); }
@@ -24,6 +25,7 @@ impl Index<Dim> for P {
 }
 
 
+#[cfg(feature="serde-derive")]
 #[cfg(test)]
 mod tests {
     use super::*;

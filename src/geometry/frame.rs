@@ -1,6 +1,7 @@
 use super::*;
 
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Deserialize, Serialize)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[cfg_attr(feature="serde-derive", derive(Deserialize, Serialize))]
 pub struct Frame;
 
 impl Frame {

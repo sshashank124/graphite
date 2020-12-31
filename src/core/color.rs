@@ -4,7 +4,8 @@ use std::ops::*;
 use super::*;
 use crate::op;
 
-#[derive(Clone, Copy, Debug, Default, PartialEq, Deserialize, Serialize)]
+#[derive(Clone, Copy, Debug, Default, PartialEq)]
+#[cfg_attr(feature="serde-derive", derive(Deserialize, Serialize))]
 pub struct Color(F3);
 
 impl Zero for Color { const ZERO: Self = Self(F3::ZERO); }
@@ -36,8 +37,6 @@ op!(SubAssign::sub_assign, *mut Color -> F -> ());
 op!(MulAssign::mul_assign, *mut Color -> F -> ());
 op!(DivAssign::div_assign, *mut Color -> F -> ());
 
-// TODO implement indexing + with R, G, B + spectral channels
-
 impl Sum for Color {
     #[inline(always)]
     fn sum<It>(it: It) -> Self where It: Iterator<Item=Self>
@@ -51,6 +50,7 @@ impl Product for Color {
 }
 
 
+#[cfg(feature="serde-derive")]
 #[cfg(test)]
 mod tests {
     use super::*;
