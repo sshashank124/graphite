@@ -87,7 +87,7 @@ impl<A> A2<A> where A: Zero + One {
         match dim {
             X => A2(A::ONE, A::ZERO),
             Y => A2(A::ZERO, A::ONE),
-            _ => unreachable!(),
+            Z => unreachable!(),
         }
     }
 }

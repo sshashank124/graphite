@@ -88,7 +88,7 @@ pub trait Float: Num + Half + Inv + Epsilon {
     let dis = difference_of_products(b, b, 4. * a, c);
     if dis < 0. { return None }
     let disqrt = dis.sqrt();
-    let q = -0.5 * (b + b.signum() * disqrt);
+    let q = -0.5 * b.signum().mul_add(disqrt, b);
     let t1 = q / a;
     let t2 = c / q;
     Some(if t1 <= t2 { A2(t1, t2) } else { A2(t2, t1) })

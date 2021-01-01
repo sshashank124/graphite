@@ -13,10 +13,10 @@ impl Zero for Color { const ZERO: Self = Self(F3::ZERO); }
 impl One for Color { const ONE: Self = Self(F3::ONE); }
 
 impl Color {
-    #[inline(always)] pub fn rgb(rgb: F3) -> Self { Self(rgb) }
+    #[inline(always)] pub const fn rgb(rgb: F3) -> Self { Self(rgb) }
     #[inline(always)] pub fn gray(g: F) -> Self { Self(F3::rep(g)) }
     #[inline(always)] pub fn max_channel(self) -> F { self.0.max() }
-    #[inline(always)] pub fn to_rgb(self) -> F3 { self.0 }
+    #[inline(always)] pub const fn to_rgb(self) -> F3 { self.0 }
 }
 
 op!(Neg::neg, *Color);

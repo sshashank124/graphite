@@ -41,7 +41,7 @@ impl<A> Mul<A3<A>> for Affine3
     type Output = A3<A>;
     #[inline(always)] fn mul(self, o: A3<A>) -> A3<A> {
         let r = self.r * o;
-        self.t.map(|t| r.zip(t, Add::add)).unwrap_or_else(|| r)
+        self.t.map_or_else(|| r, |t| r.zip(t, Add::add))
     }
 }
 
@@ -49,7 +49,7 @@ impl Mul for Affine3 {
     type Output = Self;
     #[inline(always)] fn mul(self, o: Self) -> Self {
         let r = self.r * o.r;
-        let t = o.t.map(|ot| Some(self * ot)).unwrap_or_else(|| self.t);
+        let t = o.t.map_or_else(|| self.t, |ot| Some(self * ot));
         Self::new(r, t)
     }
 }

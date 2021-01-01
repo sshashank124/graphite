@@ -36,7 +36,7 @@ impl UniformTriangle {
         else { A2(t[0] - o, t[1]) }
     }
 
-    #[inline(always)] pub fn pdf() -> F { 2. }
+    #[inline(always)] pub const fn pdf() -> F { 2. }
 }
 
 impl UniformDisk {
@@ -50,7 +50,7 @@ impl UniformDisk {
         }
     }
 
-    #[inline(always)] pub fn pdf() -> F { F::INV_PI }
+    #[inline(always)] pub const fn pdf() -> F { F::INV_PI }
 }
 
 impl CosineHemisphere {
@@ -69,7 +69,7 @@ impl UniformCylinder {
         A3(F::cos(t), F::sin(t), 2. * s[X] - 1.)
     }
 
-    #[inline(always)] pub fn pdf() -> F { F::INV_4PI }
+    #[inline(always)] pub const fn pdf() -> F { F::INV_4PI }
 }
 
 impl UniformSphere {
@@ -79,7 +79,7 @@ impl UniformSphere {
         A3(r * v[X], r * v[Y], v[Z])
     }
 
-    #[inline(always)] pub fn pdf() -> F { F::INV_4PI }
+    #[inline(always)] pub const fn pdf() -> F { F::INV_4PI }
 }
 
 impl UniformHemisphere {
@@ -88,7 +88,7 @@ impl UniformHemisphere {
         A3(v[X], v[Y], v[Z].abs())
     }
 
-    #[inline(always)] pub fn pdf() -> F { F::INV_2PI }
+    #[inline(always)] pub const fn pdf() -> F { F::INV_2PI }
 }
 
 impl BeckmannHemisphere {
