@@ -1,7 +1,11 @@
-#![feature(array_map)]
-#![feature(const_fn)]
+#![feature(array_map,
+           const_fn)]
 
-#![warn(clippy::all, clippy::pedantic, clippy::nursery, clippy::cargo)]
+#![warn(clippy::all,
+        clippy::cargo,
+        clippy::nursery,
+        clippy::pedantic)]
+
 #![allow(clippy::cast_possible_truncation,
          clippy::cast_possible_wrap,
          clippy::cast_precision_loss,
