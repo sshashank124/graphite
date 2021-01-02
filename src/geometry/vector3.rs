@@ -57,7 +57,7 @@ impl Index<Dim> for V {
 mod tests {
     use super::*;
 
-    #[test] fn v() {
+    #[test] fn deser_v() {
         assert_eq!(serde_json::from_str::<V>("[-1, 1, 0.5]").unwrap(),
                    V(A3(-1., 1., 0.5)));
     }

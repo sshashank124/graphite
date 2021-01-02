@@ -204,7 +204,7 @@ impl<A> From<A3<A>> for (A, A, A)
 mod tests {
     use super::*;
 
-    #[test] fn f3() {
+    #[test] fn deser_f3() {
         assert_eq!(serde_json::from_str::<F3>("[-1, 1, 0.5]").unwrap(),
                    A3(-1., 1., 0.5));
     }

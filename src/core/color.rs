@@ -56,7 +56,7 @@ impl Product for Color {
 mod tests {
     use super::*;
 
-    #[test] fn rgb() {
+    #[test] fn deser_rgb() {
         assert_eq!(serde_json::from_str::<Color>("[-1, 0.5, 1]").unwrap(),
                    Color(A3(-1., 0.5, 1.)));
     }

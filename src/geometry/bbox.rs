@@ -43,7 +43,7 @@ impl Index<Dim> for BBox {
 mod tests {
     use super::*;
 
-    #[test] fn bbox() {
+    #[test] fn deser_bbox() {
         let s = "[[-1, 1], [2, 10], [0.5, -0.5]]";
         assert_eq!(serde_json::from_str::<BBox>(s).unwrap(),
                    BBox(A3(B::b(-1., 1.), B::b(2., 10.), B::b(0.5, -0.5))));

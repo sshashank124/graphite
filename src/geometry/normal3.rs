@@ -42,7 +42,7 @@ impl Index<Dim> for N {
 mod tests {
     use super::*;
 
-    #[test] fn n() {
+    #[test] fn deser_n() {
         assert_eq!(serde_json::from_str::<N>("[-1, 1, 0.5]").unwrap(),
                    N::from(A3(-1., 1., 0.5)));
     }

@@ -31,7 +31,7 @@ impl Index<Dim> for P {
 mod tests {
     use super::*;
 
-    #[test] fn p() {
+    #[test] fn deser_p() {
         assert_eq!(serde_json::from_str::<P>("[-1, 1, 0.5]").unwrap(),
                    P(A3(-1., 1., 0.5)));
     }

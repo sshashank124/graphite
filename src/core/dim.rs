@@ -17,12 +17,12 @@ pub const XYZ: A3<Dim> = A3(X, Y, Z);
 mod tests {
     use super::*;
 
-    #[test] fn x()
+    #[test] fn deser_x()
     { assert_eq!(serde_json::from_str::<Dim>("\"X\"").unwrap(), X); }
 
-    #[test] fn y()
+    #[test] fn deser_y()
     { assert_eq!(serde_json::from_str::<Dim>("\"Y\"").unwrap(), Y); }
 
-    #[test] fn z()
+    #[test] fn deser_z()
     { assert_eq!(serde_json::from_str::<Dim>("\"Z\"").unwrap(), Z); }
 }

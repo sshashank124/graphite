@@ -209,9 +209,9 @@ impl From<I2> for A2<usize>
 mod tests {
     use super::*;
 
-    #[test] fn i2()
+    #[test] fn deser_i2()
     { assert_eq!(serde_json::from_str::<I2>("[-1, 1]").unwrap(), A2(-1, 1)); }
 
-    #[test] fn f2()
+    #[test] fn deser_f2()
     { assert_eq!(serde_json::from_str::<F2>("[-1, 1]").unwrap(), A2(-1., 1.)); }
 }

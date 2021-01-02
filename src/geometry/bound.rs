@@ -68,7 +68,7 @@ impl Index<usize> for B {
 mod tests {
     use super::*;
 
-    #[test] fn b() {
+    #[test] fn deser_b() {
         assert_eq!(serde_json::from_str::<B>("[-1, 1]").unwrap(),
                    B::b(-1., 1.));
     }

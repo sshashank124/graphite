@@ -121,25 +121,25 @@ impl From<Affine3Config> for Affine3 {
 mod tests {
     use super::*;
 
-    #[test] fn translate() {
+    #[test] fn deser_translate() {
         let s = r#"{ "translate": [1, -2, 0.5] }"#;
         assert_eq!(serde_json::from_str::<Affine3>(s).unwrap(),
                    Affine3::translate(A3(1., -2., 0.5)));
     }
 
-    #[test] fn scale() {
+    #[test] fn deser_scale() {
         let s = r#"{ "scale": [1, -2, 0.5] }"#;
         assert_eq!(serde_json::from_str::<Affine3>(s).unwrap(),
                    Affine3::scale(A3(1., -2., 0.5)));
     }
 
-    #[test] fn rotate() {
+    #[test] fn deser_rotate() {
         let s = r#"{ "rotate": { "axis": [1, -2, 0.5], "angle": 50 } }"#;
         assert_eq!(serde_json::from_str::<Affine3>(s).unwrap(),
                    Affine3::rotate(A3(1., -2., 0.5), 50.));
     }
 
-    #[test] fn look_at() {
+    #[test] fn deser_look_at() {
         let s = r#"{ "look_at": { "pos": [1, -2, 0.5],
                                   "target": [100, 4, -10],
                                   "up": [0, 1, 1] } }"#;
