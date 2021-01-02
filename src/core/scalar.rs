@@ -12,7 +12,7 @@ impl Half for F { const HALF: Self = 0.5; }
 impl Num for F { }
 
 impl Inv for F
-{ type Output = F; #[inline(always)] fn inv(self) -> F { self.recip() } }
+{ type Output = F; #[inline] fn inv(self) -> F { self.recip() } }
 impl Epsilon for f32 { const EPS: Self = 1e-4; }
 impl Epsilon for f64 { const EPS: Self = 1e-6; }
 
@@ -31,19 +31,19 @@ impl Float for F {
 
     const FRAC_1_2POW32: Self = 2.328_306_4e-10;
 
-    #[inline(always)] fn ceili(self) -> I { self.ceil() as I }
-    #[inline(always)] fn floori(self) -> I { self.floor() as I }
+    #[inline] fn ceili(self) -> I { self.ceil() as I }
+    #[inline] fn floori(self) -> I { self.floor() as I }
 
-    #[inline(always)] fn exp(f: Self) -> Self { f.exp() }
-    #[inline(always)] fn sqrt(self) -> Self { self.sqrt() }
+    #[inline] fn exp(f: Self) -> Self { f.exp() }
+    #[inline] fn sqrt(self) -> Self { self.sqrt() }
 
-    #[inline(always)] fn sin(self) -> Self { self.sin() }
-    #[inline(always)] fn cos(self) -> Self { self.cos() }
-    #[inline(always)] fn tan(self) -> Self { self.tan() }
-    #[inline(always)] fn sind(self) -> Self { self.to_radians().sin() }
-    #[inline(always)] fn cosd(self) -> Self { self.to_radians().cos() }
-    #[inline(always)] fn tand(self) -> Self { self.to_radians().tan() }
+    #[inline] fn sin(self) -> Self { self.sin() }
+    #[inline] fn cos(self) -> Self { self.cos() }
+    #[inline] fn tan(self) -> Self { self.tan() }
+    #[inline] fn sind(self) -> Self { self.to_radians().sin() }
+    #[inline] fn cosd(self) -> Self { self.to_radians().cos() }
+    #[inline] fn tand(self) -> Self { self.to_radians().tan() }
 
-    #[inline(always)] fn discrete(a: Self, n: I) -> I
+    #[inline] fn discrete(a: Self, n: I) -> I
     { Num::min(Self::floori(a * n as Self), n - 1) }
 }

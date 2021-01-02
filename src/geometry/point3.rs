@@ -17,12 +17,12 @@ op!(Mul::mul, *P ->  F -> P);
 op!(Mul::mul,  T -> *P -> P);
 op!(Div::div,  T -> *P -> P);
 
-impl From<F3> for P { #[inline(always)] fn from(f3: F3) -> Self { Self(f3) } }
-impl From<P> for F3 { #[inline(always)] fn from(p: P) -> Self { p.0 } }
+impl From<F3> for P { #[inline] fn from(f3: F3) -> Self { Self(f3) } }
+impl From<P> for F3 { #[inline] fn from(p: P) -> Self { p.0 } }
 
 impl Index<Dim> for P {
     type Output = F;
-    #[inline(always)] fn index(&self, dim: Dim) -> &F { &self.0[dim] }
+    #[inline] fn index(&self, dim: Dim) -> &F { &self.0[dim] }
 }
 
 

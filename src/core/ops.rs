@@ -3,40 +3,40 @@ macro_rules! op {
     ($trait:ident::$op:ident, *$type:ident) => {
         impl $trait for $type {
             type Output = $type;
-            #[inline(always)]
+            #[inline]
             fn $op(self) -> $type { $type($trait::$op(self.0)) }
         }
     };
     ($trait:ident::$op:ident, *$lhs:ident -> *$rhs:ident -> $out:ident) => {
         impl $trait<$rhs> for $lhs {
             type Output = $out;
-            #[inline(always)]
+            #[inline]
             fn $op(self, b: $rhs) -> $out { $out($trait::$op(self.0, b.0)) }
         }
     };
     ($trait:ident::$op:ident, $lhs:ident -> *$rhs:ident -> $out:ident) => {
         impl $trait<$rhs> for $lhs {
             type Output = $out;
-            #[inline(always)]
+            #[inline]
             fn $op(self, b: $rhs) -> $out { $out($trait::$op(self, b.0)) }
         }
     };
     ($trait:ident::$op:ident, *$lhs:ident -> $rhs:ident -> $out:ident) => {
         impl $trait<$rhs> for $lhs {
             type Output = $out;
-            #[inline(always)]
+            #[inline]
             fn $op(self, b: $rhs) -> $out { $out($trait::$op(self.0, b)) }
         }
     };
     ($trait:ident::$op:ident, *mut $lhs:ident -> *$rhs:ident -> ()) => {
         impl $trait<$rhs> for $lhs {
-            #[inline(always)]
+            #[inline]
             fn $op(&mut self, b: $rhs) { $trait::$op(&mut self.0, b.0); }
         }
     };
     ($trait:ident::$op:ident, *mut $lhs:ident -> $rhs:ident -> ()) => {
         impl $trait<$rhs> for $lhs {
-            #[inline(always)]
+            #[inline]
             fn $op(&mut self, b: $rhs) { $trait::$op(&mut self.0, b); }
         }
     };
@@ -48,7 +48,7 @@ macro_rules! cw_unary_op {
         impl<A> $trait for $array<A> where A: $trait<Output = A>
         {
             type Output = $array<A>;
-            #[inline(always)] fn $op(self) -> Self::Output
+            #[inline] fn $op(self) -> Self::Output
             { $array::map(self, $trait::$op) }
         }
     };
@@ -61,7 +61,7 @@ macro_rules! cw_binary_op {
             where A: $trait<B, Output = C>
         {
             type Output = $array<C>;
-            #[inline(always)] fn $op(self, b: $array<B>) -> Self::Output
+            #[inline] fn $op(self, b: $array<B>) -> Self::Output
             { $array::zip(self, b, $trait::$op) }
         }
     };
@@ -73,7 +73,7 @@ macro_rules! cw_binary_assign_op {
         impl<A, B> $trait<$array<B>> for $array<A>
             where A: $trait<B>
         {
-            #[inline(always)] fn $op(&mut self, b: $array<B>)
+            #[inline] fn $op(&mut self, b: $array<B>)
             { $array::zipi(self, b, $trait::$op) }
         }
     };
@@ -87,7 +87,7 @@ macro_rules! scalar_binary_op {
                   N: Num
         {
             type Output = $array<B>;
-            #[inline(always)] fn $op(self, n: N) -> Self::Output
+            #[inline] fn $op(self, n: N) -> Self::Output
             { $array::zips(self, n, $trait::$op) }
         }
     };
@@ -100,7 +100,7 @@ macro_rules! scalar_binary_assign_op {
             where N: Num,
                   A: $trait<N>
         {
-            #[inline(always)] fn $op(&mut self, n: N)
+            #[inline] fn $op(&mut self, n: N)
             { $array::zipsi(self, n, $trait::$op) }
         }
     };

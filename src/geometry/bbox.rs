@@ -11,10 +11,10 @@ pub struct BBox(pub A3<B>);
 impl Zero for BBox { const ZERO: Self = BBox(A3::ZERO); }
 
 impl BBox {
-    #[inline(always)] pub fn center(&self) -> P { P(self.0.map(B::center)) }
-    #[inline(always)] pub fn extents(&self) -> F3 { self.0.map(B::extent) }
+    #[inline] pub fn center(&self) -> P { P(self.0.map(B::center)) }
+    #[inline] pub fn extents(&self) -> F3 { self.0.map(B::extent) }
 
-    #[inline(always)] pub fn max_extent(&self) -> (F, Dim) {
+    #[inline] pub fn max_extent(&self) -> (F, Dim) {
         self.extents().zip(XYZ, |a, b| (a, b))
             .reduce(|(a, b), (c, d)| if a > c { (a, b) } else { (c, d) })
     }
@@ -34,7 +34,7 @@ op!(Div::div, T -> *BBox -> BBox);
 
 impl Index<Dim> for BBox {
     type Output = B;
-    #[inline(always)] fn index(&self, dim: Dim) -> &B { &self.0[dim] }
+    #[inline] fn index(&self, dim: Dim) -> &B { &self.0[dim] }
 }
 
 

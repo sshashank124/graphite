@@ -16,28 +16,28 @@ pub trait Num: Copy + PartialOrd + PartialEq
              + Mul<Self, Output = Self> + MulAssign<Self>
              + Div<Self, Output = Self> + DivAssign<Self>
 {
-    #[inline(always)] fn eq(a: Self, b: Self) -> bool { a == b }
+    #[inline] fn eq(a: Self, b: Self) -> bool { a == b }
 
-    #[inline(always)] fn sq(self) -> Self { self * self }
+    #[inline] fn sq(self) -> Self { self * self }
 
-    #[inline(always)] fn abs(a: Self) -> Self { if a >= Self::ZERO { a } else { -a } }
+    #[inline] fn abs(a: Self) -> Self { if a >= Self::ZERO { a } else { -a } }
 
-    #[inline(always)] fn min(a: Self, b: Self) -> Self { if a < b { a } else { b } }
-    #[inline(always)] fn max(a: Self, b: Self) -> Self { if a < b { b } else { a } }
+    #[inline] fn min(a: Self, b: Self) -> Self { if a < b { a } else { b } }
+    #[inline] fn max(a: Self, b: Self) -> Self { if a < b { b } else { a } }
 
-    #[inline(always)] fn is_pos(a: Self) -> bool { a > Self::ZERO }
-    #[inline(always)] fn is_nonpos(a: Self) -> bool { !Self::is_pos(a) }
+    #[inline] fn is_pos(a: Self) -> bool { a > Self::ZERO }
+    #[inline] fn is_nonpos(a: Self) -> bool { !Self::is_pos(a) }
 
-    #[inline(always)] fn is_neg(a: Self) -> bool { a < Self::ZERO }
-    #[inline(always)] fn is_nonneg(a: Self) -> bool { !Self::is_neg(a) }
+    #[inline] fn is_neg(a: Self) -> bool { a < Self::ZERO }
+    #[inline] fn is_nonneg(a: Self) -> bool { !Self::is_neg(a) }
 
-    #[inline(always)]
+    #[inline]
     fn clamp(v: Self, a: Self, b: Self) -> Self { Num::min(Num::max(v, a), b) }
-    #[inline(always)]
+    #[inline]
     fn clamp_pos(v: Self) -> Self { Num::max(v, Self::ZERO) }
-    #[inline(always)]
+    #[inline]
     fn clamp_unit(v: Self) -> Self { Num::clamp(v, Self::ZERO, Self::ONE) }
-    #[inline(always)]
+    #[inline]
     fn clamp_one(v: Self) -> Self { Num::clamp(v, -Self::ONE, Self::ONE) }
 }
 
@@ -71,20 +71,20 @@ pub trait Float: Num + Half + Inv + Epsilon {
 
     fn discrete(a: Self, n: I) -> I;
 
-    #[inline(always)]
+    #[inline]
     fn approx_eq(a: Self, b: Self) -> bool { Self::abs(a - b) < Self::EPS }
-    #[inline(always)]
+    #[inline]
     fn approx_zero(a: Self) -> bool { Self::approx_eq(a, Self::ZERO) }
-    #[inline(always)]
+    #[inline]
     fn approx_one(a: Self) -> bool { Self::approx_eq(a, Self::ONE) }
 }
 
-#[inline(always)] pub fn difference_of_products(a: F, b: F, c: F, d: F) -> F {
+#[inline] pub fn difference_of_products(a: F, b: F, c: F, d: F) -> F {
     let cd = c * d;
     a.mul_add(b, -cd) + c.mul_add(-d, cd)
 }
 
-#[inline(always)] pub fn quad(a: F, b: F, c: F) -> Option<F2> {
+#[inline] pub fn quad(a: F, b: F, c: F) -> Option<F2> {
     let dis = difference_of_products(b, b, 4. * a, c);
     if dis < 0. { return None }
     let disqrt = dis.sqrt();
