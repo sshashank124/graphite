@@ -7,22 +7,22 @@ use std::ops::{Add, Div, Mul, Neg};
 use super::*;
 
 pub use normalization2::Norm2 as T2;
-pub use TransformPair3 as T;
+pub use Affine3 as T;
 
 type T3 = affine3::Affine3;
 
 #[derive(Clone, Copy, Debug, Default, PartialEq)]
 #[cfg_attr(feature="serde-derive", derive(Deserialize))]
-#[cfg_attr(feature="serde-derive", serde(from="TransformPair3Config"))]
+#[cfg_attr(feature="serde-derive", serde(from="Affine3Config"))]
 #[repr(C)]
-pub struct TransformPair3 {
+pub struct Affine3 {
     f: T3,
     i: T3,
 }
 
-impl One for TransformPair3 { const ONE: Self = Self::new(T3::ONE, T3::ONE); }
+impl One for Affine3 { const ONE: Self = Self::new(T3::ONE, T3::ONE); }
 
-impl TransformPair3 {
+impl Affine3 {
     #[inline(always)] const fn new(f: T3, i: T3) -> Self { Self { f, i } }
 
     #[inline(always)] pub fn translate<A>(v: A) -> Self
@@ -56,18 +56,18 @@ impl TransformPair3 {
     { it.rfold(Self::ONE, Mul::mul) }
 }
 
-impl Inv for TransformPair3 {
+impl Inv for Affine3 {
     type Output = Self;
     #[inline(always)] fn inv(self) -> Self { Self::new(self.i, self.f) }
 }
 
-impl Mul for TransformPair3 {
+impl Mul for Affine3 {
     type Output = Self;
     #[inline(always)] fn mul(self, s: Self) -> Self
     { Self::new(self.f * s.f, s.i * self.i) }
 }
 
-impl<A> Mul<A3<A>> for TransformPair3
+impl<A> Mul<A3<A>> for Affine3
     where A: Copy + Zero + Add<F, Output = A> + Add<Output = A>
            + Mul<F, Output = A>
 {
@@ -75,7 +75,7 @@ impl<A> Mul<A3<A>> for TransformPair3
     #[inline(always)] fn mul(self, t: A3<A>) -> A3<A> { self.f * t }
 }
 
-impl<A> Div<A3<A>> for TransformPair3
+impl<A> Div<A3<A>> for Affine3
     where A: Copy + Zero + Add<F, Output = A> + Add<Output = A>
            + Mul<F, Output = A>
 {
@@ -87,7 +87,7 @@ impl<A> Div<A3<A>> for TransformPair3
 #[cfg(feature="serde-derive")]
 #[derive(Debug, Deserialize)]
 #[serde(rename_all="snake_case")]
-enum TransformPair3Config {
+enum Affine3Config {
     Translate(F3),
     Scale(F3),
     Rotate {
@@ -102,14 +102,14 @@ enum TransformPair3Config {
 }
 
 #[cfg(feature="serde-derive")]
-impl From<TransformPair3Config> for TransformPair3 {
-    fn from(tc: TransformPair3Config) -> Self {
+impl From<Affine3Config> for Affine3 {
+    fn from(tc: Affine3Config) -> Self {
         match tc {
-            TransformPair3Config::Translate(v) => Self::translate(v),
-            TransformPair3Config::Scale(s) => Self::scale(s),
-            TransformPair3Config::Rotate { axis, angle }
+            Affine3Config::Translate(v) => Self::translate(v),
+            Affine3Config::Scale(s) => Self::scale(s),
+            Affine3Config::Rotate { axis, angle }
                 => Self::rotate(axis, angle),
-            TransformPair3Config::LookAt { pos, target, up }
+            Affine3Config::LookAt { pos, target, up }
                 => Self::look_at(pos, target, up),
         }
     }
@@ -123,28 +123,28 @@ mod tests {
 
     #[test] fn translate() {
         let s = r#"{ "translate": [1, -2, 0.5] }"#;
-        assert_eq!(serde_json::from_str::<TransformPair3>(s).unwrap(),
-                   TransformPair3::translate(A3(1., -2., 0.5)));
+        assert_eq!(serde_json::from_str::<Affine3>(s).unwrap(),
+                   Affine3::translate(A3(1., -2., 0.5)));
     }
 
     #[test] fn scale() {
         let s = r#"{ "scale": [1, -2, 0.5] }"#;
-        assert_eq!(serde_json::from_str::<TransformPair3>(s).unwrap(),
-                   TransformPair3::scale(A3(1., -2., 0.5)));
+        assert_eq!(serde_json::from_str::<Affine3>(s).unwrap(),
+                   Affine3::scale(A3(1., -2., 0.5)));
     }
 
     #[test] fn rotate() {
         let s = r#"{ "rotate": { "axis": [1, -2, 0.5], "angle": 50 } }"#;
-        assert_eq!(serde_json::from_str::<TransformPair3>(s).unwrap(),
-                   TransformPair3::rotate(A3(1., -2., 0.5), 50.));
+        assert_eq!(serde_json::from_str::<Affine3>(s).unwrap(),
+                   Affine3::rotate(A3(1., -2., 0.5), 50.));
     }
 
     #[test] fn look_at() {
         let s = r#"{ "look_at": { "pos": [1, -2, 0.5],
                                   "target": [100, 4, -10],
                                   "up": [0, 1, 1] } }"#;
-        assert_eq!(serde_json::from_str::<TransformPair3>(s).unwrap(),
-                   TransformPair3::look_at(P(A3(1., -2., 0.5)),
+        assert_eq!(serde_json::from_str::<Affine3>(s).unwrap(),
+                   Affine3::look_at(P(A3(1., -2., 0.5)),
                                            P(A3(100., 4., -10.)),
                                            V(A3(0., 1., 1.))));
     }

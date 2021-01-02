@@ -11,7 +11,6 @@
          clippy::cast_precision_loss,
          clippy::cast_sign_loss,
          clippy::inline_always,
-         clippy::module_name_repetitions,
          clippy::must_use_candidate,
          clippy::suspicious_arithmetic_impl,
          clippy::use_self,
