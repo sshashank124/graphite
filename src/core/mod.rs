@@ -1,6 +1,5 @@
 mod array2;
 mod array3;
-mod color;
 mod dim;
 mod interpolate;
 mod num;
@@ -12,7 +11,6 @@ pub(crate) use serde::{Deserialize, Serialize};
 
 pub use array2::*;
 pub use array3::*;
-pub use color::*;
 pub use dim::*;
 pub use interpolate::*;
 pub use num::*;
