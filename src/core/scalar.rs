@@ -34,8 +34,8 @@ impl Float for F {
     #[inline] fn exp(self) -> Self { self.exp() }
     #[inline] fn sqrt(self) -> Self { self.sqrt() }
 
-    #[inline] fn ceili(self) -> I { self.ceil() as I }
-    #[inline] fn floori(self) -> I { self.floor() as I }
+    #[inline] fn ceili(self) -> I { self.ceil().conv() }
+    #[inline] fn floori(self) -> I { self.floor().conv() }
 
     #[inline] fn sin(self) -> Self { self.sin() }
     #[inline] fn cos(self) -> Self { self.cos() }
@@ -45,7 +45,7 @@ impl Float for F {
     #[inline] fn tand(self) -> Self { self.to_radians().tan() }
 
     #[inline] fn discrete(a: Self, n: I) -> I
-    { Num::min(Self::floori(a * n as Self), n - 1) }
+    { Num::min(Self::floori(a * F::conv_from(n)), n - 1) }
 }
 
 macro_rules! conv_primitive {
