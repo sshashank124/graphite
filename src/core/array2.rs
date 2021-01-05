@@ -17,7 +17,7 @@ pub type U2 = A2<U>;
 pub struct A2<A>(pub A, pub A);
 
 impl<A> A2<A> {
-    #[inline] pub fn as_ref(&self) -> A2<&A> { A2(&self.0, &self.1) }
+    #[inline] pub const fn as_ref(&self) -> A2<&A> { A2(&self.0, &self.1) }
 
     #[inline] pub fn map<B>(self, f: impl Fn(A) -> B) -> A2<B>
     { A2(f(self.0), f(self.1)) }
@@ -201,7 +201,7 @@ impl<A> From<[A; 2]> for A2<A> where A: Copy
 impl<A> From<A2<A>> for [A; 2]
 { #[inline] fn from(aa: A2<A>) -> [A; 2] { [aa.0, aa.1] } }
 
-impl<A, B> Convert<A2<B>> for A2<A> where A: Convert<B>
+impl<A, B> Conv<A2<B>> for A2<A> where A: Conv<B>
 { #[inline] fn conv(self) -> A2<B> { A2(self.0.conv(), self.1.conv()) } }
 
 

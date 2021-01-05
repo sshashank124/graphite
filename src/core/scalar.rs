@@ -50,7 +50,7 @@ impl Float for F {
 
 macro_rules! conv_primitive {
     ($a:ident => $b:ident) => {
-        impl Convert<$b> for $a { #[inline] fn conv(self) -> $b { self as $b } }
+        impl Conv<$b> for $a { #[inline] fn conv(self) -> $b { self as $b } }
     };
     ($a:ident => $b:ident, $($bb:ident),+) => {
         conv_primitive!{$a => $b}
