@@ -45,7 +45,7 @@ impl Float for F {
     #[inline] fn tand(self) -> Self { self.to_radians().tan() }
 
     #[inline] fn discrete(a: Self, n: I) -> I
-    { Num::min(Self::floori(a * F::conv_from(n)), n - 1) }
+    { Num::min(Self::floori(a * F::of(n)), n - 1) }
 }
 
 macro_rules! conv_primitive {
