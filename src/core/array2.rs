@@ -7,16 +7,14 @@ use crate::{
     scalar_binary_op, scalar_binary_assign_op
 };
 
-
 pub type F2 = A2<F>;
 pub type I2 = A2<I>;
+pub type U2 = A2<U>;
 
 #[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
 #[cfg_attr(feature="serde-derive", derive(Deserialize, Serialize))]
 #[repr(C)]
 pub struct A2<A>(pub A, pub A);
-
-// General Arrays
 
 impl<A> A2<A> {
     #[inline] pub fn map<B>(self, f: impl Fn(A) -> B) -> A2<B>
@@ -37,6 +35,9 @@ impl<A> A2<A> {
     #[inline] pub fn zipsi<B>(&mut self, b: B, f: impl Fn(&mut A, B))
         where B: Copy,
     { f(&mut self.0, b); f(&mut self.1, b); }
+
+    #[inline] pub fn fold<B>(self, b: B, f: impl Fn(B, A) -> B) -> B
+    { f(f(b, self.0), self.1) }
 
     #[inline]
     pub fn reduce<B>(self, f: impl Fn(A, A) -> B) -> B { f(self.0, self.1) }
@@ -135,7 +136,8 @@ macro_rules! index {
     };
 }
 
-index!(I[0, 1]);
+index!(i32[0, 1]);
+index!(u32[0, 1]);
 index!(usize[0, 1]);
 index!(Dim[X, Y]);
 index!(bool[false, true]);
@@ -191,17 +193,16 @@ impl<A> From<(A, A)> for A2<A>
 impl<A> From<A2<A>> for (A, A)
 { #[inline] fn from(aa: A2<A>) -> (A, A) { (aa.0, aa.1) } }
 
-impl From<I2> for F2
-{ fn from(ii: I2) -> Self { A2::map(ii, |i| i as F) } }
+impl<A> From<[A; 2]> for A2<A> where A: Copy
+{ #[inline] fn from(aa: [A; 2]) -> A2<A> { A2(aa[0], aa[1]) } }
 
-impl From<F2> for I2
-{ fn from(ff: F2) -> Self { A2::map(ff, |f| f as I) } }
+impl<A> From<A2<A>> for [A; 2]
+{ #[inline] fn from(aa: A2<A>) -> [A; 2] { [aa.0, aa.1] } }
 
-impl From<A2<usize>> for I2
-{ fn from(uu: A2<usize>) -> Self { A2::map(uu, |u| u as I) } }
-
-impl From<I2> for A2<usize>
-{ fn from(ii: I2) -> Self { A2::map(ii, |i| i as usize) } }
+impl<A, B> Convert<A2<B>> for A2<A> where A: Convert<B> {
+    #[inline] fn conv(aa: A2<A>) -> A2<B>
+    { A2(Convert::conv(aa.0), Convert::conv(aa.1)) }
+}
 
 
 #[cfg(feature="serde-derive")]

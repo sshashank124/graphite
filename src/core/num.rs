@@ -9,15 +9,13 @@ pub trait Half { const HALF: Self; }
 pub trait Inv { type Output; fn inv(self) -> Self; }
 pub trait Epsilon: Copy { const EPS: Self; }
 
-pub trait Num: Copy + PartialOrd + PartialEq
+pub trait Num: Copy + PartialEq + PartialOrd
              + Zero + One + Two + Neg<Output = Self>
              + Add<Self, Output = Self> + AddAssign<Self>
              + Sub<Self, Output = Self> + SubAssign<Self>
              + Mul<Self, Output = Self> + MulAssign<Self>
              + Div<Self, Output = Self> + DivAssign<Self>
 {
-    #[inline] fn eq(a: Self, b: Self) -> bool { a == b }
-
     #[inline] fn sq(self) -> Self { self * self }
 
     #[inline] fn abs(a: Self) -> Self { if a >= Self::ZERO { a } else { -a } }
@@ -59,7 +57,7 @@ pub trait Float: Num + Half + Inv + Epsilon {
     fn ceili(self) -> I;
     fn floori(self) -> I;
 
-    fn exp(f: Self) -> Self;
+    fn exp(self) -> Self;
     fn sqrt(self) -> Self;
 
     fn sin(self) -> Self;

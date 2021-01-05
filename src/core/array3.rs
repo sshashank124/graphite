@@ -7,15 +7,12 @@ use crate::{
     scalar_binary_op, scalar_binary_assign_op
 };
 
-
 pub type F3 = A3<F>;
 
 #[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
 #[cfg_attr(feature="serde-derive", derive(Deserialize, Serialize))]
 #[repr(C)]
 pub struct A3<A>(pub A, pub A, pub A);
-
-// General Arrays
 
 impl<A> A3<A> {
     #[inline] pub fn map<B>(self, f: impl Fn(A) -> B) -> A3<B>
@@ -143,7 +140,8 @@ macro_rules! index {
     };
 }
 
-index!(I[0, 1, 2]);
+index!(i32[0, 1, 2]);
+index!(u32[0, 1, 2]);
 index!(usize[0, 1, 2]);
 index!(Dim[X, Y, Z]);
 
@@ -197,6 +195,17 @@ impl<A> From<(A, A, A)> for A3<A>
 
 impl<A> From<A3<A>> for (A, A, A)
 { #[inline] fn from(aa: A3<A>) -> (A, A, A) { (aa.0, aa.1, aa.2) } }
+
+impl<A> From<[A; 3]> for A3<A> where A: Copy
+{ #[inline] fn from(aa: [A; 3]) -> A3<A> { A3(aa[0], aa[1], aa[2]) } }
+
+impl<A> From<A3<A>> for [A; 3]
+{ #[inline] fn from(aa: A3<A>) -> [A; 3] { [aa.0, aa.1, aa.2] } }
+
+impl<A, B> Convert<A3<B>> for A3<A> where A: Convert<B> {
+    #[inline] fn conv(aa: A3<A>) -> A3<B>
+    { A3(Convert::conv(aa.0), Convert::conv(aa.1), Convert::conv(aa.2)) }
+}
 
 
 #[cfg(feature="serde-derive")]

@@ -31,11 +31,11 @@ impl Float for F {
 
     const FRAC_1_2POW32: Self = 2.328_306_4e-10;
 
+    #[inline] fn exp(self) -> Self { self.exp() }
+    #[inline] fn sqrt(self) -> Self { self.sqrt() }
+
     #[inline] fn ceili(self) -> I { self.ceil() as I }
     #[inline] fn floori(self) -> I { self.floor() as I }
-
-    #[inline] fn exp(f: Self) -> Self { f.exp() }
-    #[inline] fn sqrt(self) -> Self { self.sqrt() }
 
     #[inline] fn sin(self) -> Self { self.sin() }
     #[inline] fn cos(self) -> Self { self.cos() }
@@ -47,3 +47,20 @@ impl Float for F {
     #[inline] fn discrete(a: Self, n: I) -> I
     { Num::min(Self::floori(a * n as Self), n - 1) }
 }
+
+macro_rules! conv_primitive {
+    ($a:ident => $b:ident) => {
+        impl Convert<$b> for $a { #[inline] fn conv(a: $a) -> $b { a as $b } }
+    };
+    ($a:ident => $b:ident, $($bb:ident),+) => {
+        conv_primitive!{$a => $b}
+        conv_primitive!{$a => $($bb),+}
+    };
+    ($a:ident, $($aa:ident),+ => $($bb:ident),+) => {
+        conv_primitive!{$a => $($bb),+}
+        conv_primitive!{$($aa),+ => $($bb),+}
+    };
+}
+
+conv_primitive!(u8, u16, u32, u64, usize, i8, i16, i32, i64, isize, f32, f64
+             => u8, u16, u32, u64, usize, i8, i16, i32, i64, isize, f32, f64);
