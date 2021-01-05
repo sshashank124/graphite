@@ -17,6 +17,8 @@ pub type U2 = A2<U>;
 pub struct A2<A>(pub A, pub A);
 
 impl<A> A2<A> {
+    #[inline] pub fn as_ref(&self) -> A2<&A> { A2(&self.0, &self.1) }
+
     #[inline] pub fn map<B>(self, f: impl Fn(A) -> B) -> A2<B>
     { A2(f(self.0), f(self.1)) }
 
