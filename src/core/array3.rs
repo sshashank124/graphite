@@ -205,8 +205,8 @@ impl<A> From<A3<A>> for [A; 3]
 { #[inline] fn from(aa: A3<A>) -> [A; 3] { [aa.0, aa.1, aa.2] } }
 
 impl<A, B> Convert<A3<B>> for A3<A> where A: Convert<B> {
-    #[inline] fn conv(aa: A3<A>) -> A3<B>
-    { A3(Convert::conv(aa.0), Convert::conv(aa.1), Convert::conv(aa.2)) }
+    #[inline] fn conv(self) -> A3<B>
+    { A3(self.0.conv(), self.1.conv(), self.2.conv()) }
 }
 
 

@@ -1,1 +1,1 @@
-pub trait Convert<A> { fn conv(b: Self) -> A; }
+pub trait Convert<A> { fn conv(self) -> A; }

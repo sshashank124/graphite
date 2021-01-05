@@ -201,10 +201,8 @@ impl<A> From<[A; 2]> for A2<A> where A: Copy
 impl<A> From<A2<A>> for [A; 2]
 { #[inline] fn from(aa: A2<A>) -> [A; 2] { [aa.0, aa.1] } }
 
-impl<A, B> Convert<A2<B>> for A2<A> where A: Convert<B> {
-    #[inline] fn conv(aa: A2<A>) -> A2<B>
-    { A2(Convert::conv(aa.0), Convert::conv(aa.1)) }
-}
+impl<A, B> Convert<A2<B>> for A2<A> where A: Convert<B>
+{ #[inline] fn conv(self) -> A2<B> { A2(self.0.conv(), self.1.conv()) } }
 
 
 #[cfg(feature="serde-derive")]
