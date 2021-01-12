@@ -16,12 +16,12 @@ op!(Mul::mul, *N ->  F -> N);
 
 impl Mul<N> for T {
     type Output = N;
-    #[inline] fn mul(self, n: N) -> N { N(self.inv().t() * n.0) }
+    #[inline] fn mul(self, n: N) -> N { N::from(self.inv().t() * n.0) }
 }
 
 impl Div<N> for T {
     type Output = N;
-    #[inline] fn div(self, n: N) -> N { N(self.inv().t() / n.0) }
+    #[inline] fn div(self, n: N) -> N { N::from(self.inv().t() / n.0) }
 }
 
 impl From<F3> for N
