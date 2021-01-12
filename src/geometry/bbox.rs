@@ -13,6 +13,13 @@ impl Zero for BBox { const ZERO: Self = BBox(A3::ZERO); }
 impl BBox {
     #[inline] pub fn center(&self) -> P { P(self.0.map(B::center)) }
     #[inline] pub fn extents(&self) -> F3 { self.0.map(B::extent) }
+    #[inline] pub fn lower(&self) -> P { P(self.0.map(B::lower)) }
+    #[inline] pub fn upper(&self) -> P { P(self.0.map(B::upper)) }
+
+    #[inline] pub fn bsphere(&self) -> (P, F) {
+        let c = self.center();
+        (c, (self.upper() - c).norm())
+    }
 
     #[inline] pub fn max_extent(&self) -> (F, Dim) {
         self.extents().zip(XYZ, |a, b| (a, b))

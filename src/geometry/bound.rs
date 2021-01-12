@@ -16,6 +16,9 @@ impl B {
     #[inline] pub fn ordered(a: F2) -> B
     { if a[0] > a[1] { B(a.flip()) } else { B(a) } }
 
+    #[inline] pub fn lower(self) -> F { self.0[0] }
+    #[inline] pub fn upper(self) -> F { self.0[1] }
+
     #[inline] pub fn bounds(self, t: F) -> bool
     { self.0[0] <= t && t <= self.0[1] }
     #[inline] pub fn degen(self) -> bool { self.0[0] > self.0[1] }
