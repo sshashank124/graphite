@@ -25,7 +25,7 @@ impl Div<N> for T {
 }
 
 impl From<F3> for N
-{ #[inline] fn from(f3: F3) -> Self { Self(V(f3)) } }
+{ #[inline] fn from(f3: F3) -> Self { Self::from(V(f3)) } }
 impl From<N> for F3 { #[inline] fn from(n: N) -> Self { n.0.0 } }
 impl From<V> for N
 { #[inline] fn from(v: V) -> Self { Self(v.unit()) } }
