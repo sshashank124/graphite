@@ -22,8 +22,11 @@ impl Frame {
         A3(-v[X], -v[Y], v[Z])
     }
 
-    // Frame transforms
+    #[inline] pub fn same_hemisphere<A, B>(v1: A, v2: B) -> bool
+        where A: Into<F3>, B: Into<F3>
+    { F3::dot(v1, v2) >= 0. }
 
+    // Frame transforms
     #[inline] pub fn cart2spher<A: Into<F3>>(v: A) -> F2 {
         let v = v.into();
         let y = F::atan2(v[Y], v[X]);
