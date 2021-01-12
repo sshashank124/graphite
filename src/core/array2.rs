@@ -66,8 +66,7 @@ impl<A> A2<A> where A: Copy {
 impl<A> A2<A> where A: Add<Output = A>
 { #[inline] pub fn sum(self) -> A { self.reduce(Add::add) } }
 
-impl<A> A2<A>
-    where A: Copy + Zero + Add<Output = A> + Mul<F, Output = A>
+impl<A> A2<A> where A: Add<Output = A> + Mul<F, Output = A>
 { #[inline] pub fn mean(self) -> A { self.sum() * 0.5 } }
 
 impl<A> A2<A> where A: Mul<Output = A>
