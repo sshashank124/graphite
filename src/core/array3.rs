@@ -70,8 +70,8 @@ impl<A> A3<A> where A: Add<Output = A>
 { #[inline] pub fn sum(self) -> A { self.reduce(Add::add) } }
 
 impl<A> A3<A>
-    where A: Copy + Zero + Add<Output = A> + Div<F, Output = A>
-{ #[inline] pub fn mean(self) -> A { self.sum() / 3. } }
+    where A: Copy + Zero + Add<Output = A> + Mul<F, Output = A>
+{ #[inline] pub fn mean(self) -> A { self.sum() * 0.33333333 } }
 
 impl<A> A3<A> where A: Mul<Output = A>
 { #[inline] pub fn product(self) -> A { self.reduce(Mul::mul) } }
