@@ -16,23 +16,23 @@ op!(Mul::mul, *N ->  F -> N);
 
 impl Mul<N> for T {
     type Output = N;
-    #[inline] fn mul(self, n: N) -> N { conv!(self.inv().t() * n.0 => N) }
+    #[inline(always)] fn mul(self, n: N) -> N { conv!(self.inv().t() * n.0 => N) }
 }
 
 impl Div<N> for T {
     type Output = N;
-    #[inline] fn div(self, n: N) -> N { conv!(self.inv().t() / n.0 => N) }
+    #[inline(always)] fn div(self, n: N) -> N { conv!(self.inv().t() / n.0 => N) }
 }
 
-impl Conv<N> for V { #[inline] fn conv(self) -> N { N(self.unit()) } }
-impl Conv<V> for N { #[inline] fn conv(self) -> V { self.0 } }
+impl Conv<N> for V { #[inline(always)] fn conv(self) -> N { N(self.unit()) } }
+impl Conv<V> for N { #[inline(always)] fn conv(self) -> V { self.0 } }
 
-impl Conv<N> for F3 { #[inline] fn conv(self) -> N { conv!(self => V => N) } }
-impl Conv<F3> for N { #[inline] fn conv(self) -> F3 { conv!(self => V => F3) } }
+impl Conv<N> for F3 { #[inline(always)] fn conv(self) -> N { conv!(self => V => N) } }
+impl Conv<F3> for N { #[inline(always)] fn conv(self) -> F3 { conv!(self => V => F3) } }
 
 impl Index<Dim> for N {
     type Output = F;
-    #[inline] fn index(&self, dim: Dim) -> &F { &self.0[dim] }
+    #[inline(always)] fn index(&self, dim: Dim) -> &F { &self.0[dim] }
 }
 
 

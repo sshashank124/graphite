@@ -21,12 +21,12 @@ pub trait Interp<A> {
 impl<A> Interp<A> for LinearScale
     where A2<A>: Mul<F2, Output = A2<A>>,
               A: Copy + Zero + Add<Output = A>
-{ #[inline] fn interp(a: A2<A>, t: F) -> A { A2::dot(a, A2(1. - t, t)) } }
+{ #[inline(always)] fn interp(a: A2<A>, t: F) -> A { A2::dot(a, A2(1. - t, t)) } }
 
 impl<A> Interp<A> for SmoothScale
     where A: Copy + Zero + Add<Output = A> + Mul<F, Output = A>
 {
-    #[inline] fn interp(a: A2<A>, t: F) -> A
+    #[inline(always)] fn interp(a: A2<A>, t: F) -> A
     { LinearScale::interp(a, t.sq() * (3. - 2. * t)) }
 }
 
@@ -36,9 +36,7 @@ pub trait Balance {
 }
 
 impl Balance for LinearScale
-{ #[inline] fn balance(a: F2) -> F { a[0] / a.sum() } }
+{ #[inline(always)] fn balance(a: F2) -> F { a[0] / a.sum() } }
 
-impl Balance for PowerScale {
-    #[inline] fn balance(a: F2) -> F
-    { LinearScale::balance(a.map(F::sq)) }
-}
+impl Balance for PowerScale
+{ #[inline(always)] fn balance(a: F2) -> F { LinearScale::balance(a.map(F::sq)) } }

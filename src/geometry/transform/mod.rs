@@ -23,47 +23,45 @@ pub struct Affine3 {
 impl One for Affine3 { const ONE: Self = Self::new(T3::ONE, T3::ONE); }
 
 impl Affine3 {
-    #[inline] const fn new(f: T3, i: T3) -> Self { Self { f, i } }
+    #[inline(always)] const fn new(f: T3, i: T3) -> Self { Self { f, i } }
 
-    #[inline] pub fn translate<A>(v: A) -> Self
+    #[inline(always)] pub fn translate<A>(v: A) -> Self
         where A: Copy + Neg<Output=A> + Conv<F3>
     { Self::new(T3::translate(v), T3::translate(-v)) }
 
-    #[inline] pub fn scale<A>(v: A) -> Self
+    #[inline(always)] pub fn scale<A>(v: A) -> Self
         where A: Copy + Inv + Conv<F3>
     { Self::new(T3::scale(v), T3::scale(v.inv())) }
 
-    #[inline] pub fn rotate<A>(axis: A, angle: F) -> Self
+    #[inline(always)] pub fn rotate<A>(axis: A, angle: F) -> Self
         where A: Copy + Conv<F3>
     { Self::new(T3::rotate(axis, angle), T3::rotate(axis, -angle)) }
 
-    #[inline] pub fn look_at(pos: P, target: P, up: V) -> Self
+    #[inline(always)] pub fn look_at(pos: P, target: P, up: V) -> Self
     { Self::new(T3::look_at(pos, target, up), T3::ONE) }
 
-    #[inline] pub fn from_frame<A: Conv<F3>>(v: A) -> Self {
+    #[inline(always)] pub fn from_frame<A: Conv<F3>>(v: A) -> Self {
         let t = T3::from_frame(v);
         Self::new(t, t.t())
     }
 
-    #[inline] pub fn rot(&self) -> Self
-    { Self::new(self.f.rot(), self.i.rot()) }
+    #[inline(always)] pub fn rot(&self) -> Self { Self::new(self.f.rot(), self.i.rot()) }
 
-    #[inline] pub fn t(&self) -> Self
-    { Self::new(self.f.t(), self.i.t()) }
+    #[inline(always)] pub fn t(&self) -> Self { Self::new(self.f.t(), self.i.t()) }
 
-    #[inline]
+    #[inline(always)]
     pub fn product<It>(it: It) -> Self where It: DoubleEndedIterator<Item=Self>
     { it.rfold(Self::ONE, Mul::mul) }
 }
 
 impl Inv for Affine3 {
     type Output = Self;
-    #[inline] fn inv(self) -> Self { Self::new(self.i, self.f) }
+    #[inline(always)] fn inv(self) -> Self { Self::new(self.i, self.f) }
 }
 
 impl Mul for Affine3 {
     type Output = Self;
-    #[inline] fn mul(self, s: Self) -> Self
+    #[inline(always)] fn mul(self, s: Self) -> Self
     { Self::new(self.f * s.f, s.i * self.i) }
 }
 
@@ -72,7 +70,7 @@ impl<A> Mul<A3<A>> for Affine3
            + Mul<F, Output = A>
 {
     type Output = A3<A>;
-    #[inline] fn mul(self, t: A3<A>) -> A3<A> { self.f * t }
+    #[inline(always)] fn mul(self, t: A3<A>) -> A3<A> { self.f * t }
 }
 
 impl<A> Div<A3<A>> for Affine3
@@ -80,7 +78,7 @@ impl<A> Div<A3<A>> for Affine3
            + Mul<F, Output = A>
 {
     type Output = A3<A>;
-    #[inline] fn div(self, v: A3<A>) -> A3<A> { self.i * v }
+    #[inline(always)] fn div(self, v: A3<A>) -> A3<A> { self.i * v }
 }
 
 

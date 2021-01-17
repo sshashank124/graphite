@@ -11,12 +11,12 @@ pub struct BBox(pub A3<B>);
 impl Zero for BBox { const ZERO: Self = BBox(A3::ZERO); }
 
 impl BBox {
-    #[inline] pub fn center(&self) -> P { P(self.0.map(B::center)) }
-    #[inline] pub fn extents(&self) -> F3 { self.0.map(B::extent) }
-    #[inline] pub fn lower(&self) -> P { P(self.0.map(B::lower)) }
-    #[inline] pub fn upper(&self) -> P { P(self.0.map(B::upper)) }
+    #[inline(always)] pub fn center(&self) -> P { P(self.0.map(B::center)) }
+    #[inline(always)] pub fn extents(&self) -> F3 { self.0.map(B::extent) }
+    #[inline(always)] pub fn lower(&self) -> P { P(self.0.map(B::lower)) }
+    #[inline(always)] pub fn upper(&self) -> P { P(self.0.map(B::upper)) }
 
-    #[inline] pub fn bsphere(&self) -> (P, F) {
+    #[inline(always)] pub fn bsphere(&self) -> (P, F) {
         let c = self.center();
         (c, (self.upper() - c).norm())
     }
@@ -41,7 +41,7 @@ op!(Div::div, T -> *BBox -> BBox);
 
 impl Index<Dim> for BBox {
     type Output = B;
-    #[inline] fn index(&self, dim: Dim) -> &B { &self.0[dim] }
+    #[inline(always)] fn index(&self, dim: Dim) -> &B { &self.0[dim] }
 }
 
 

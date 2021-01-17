@@ -5,24 +5,20 @@ use super::*;
 pub struct Frame;
 
 impl Frame {
-    #[inline] pub fn ct<A: Conv<F3>>(v: A) -> F { v.conv()[Z] }
-    #[inline] pub fn st<A: Conv<F3>>(v: A) -> F
-    { F::sqrt(Self::s2t(v)) }
-    #[inline] pub fn tt<A: Copy + Conv<F3>>(v: A) -> F
-    { Self::st(v) / Self::ct(v) }
+    #[inline(always)] pub fn ct<A: Conv<F3>>(v: A) -> F { v.conv()[Z] }
+    #[inline(always)] pub fn st<A: Conv<F3>>(v: A) -> F { F::sqrt(Self::s2t(v)) }
+    #[inline(always)] pub fn tt<A: Copy + Conv<F3>>(v: A) -> F { Self::st(v) / Self::ct(v) }
 
-    #[inline] pub fn c2t<A: Conv<F3>>(v: A) -> F { Self::ct(v).sq() }
-    #[inline] pub fn s2t<A: Conv<F3>>(v: A) -> F
-    { F::clamp_pos(1. - Self::c2t(v)) }
-    #[inline] pub fn t2t<A: Copy + Conv<F3>>(v: A) -> F
-    { Self::s2t(v) / Self::c2t(v) }
+    #[inline(always)] pub fn c2t<A: Conv<F3>>(v: A) -> F { Self::ct(v).sq() }
+    #[inline(always)] pub fn s2t<A: Conv<F3>>(v: A) -> F { F::max(1. - Self::c2t(v), 0.) }
+    #[inline(always)] pub fn t2t<A: Copy + Conv<F3>>(v: A) -> F { Self::s2t(v) / Self::c2t(v) }
 
-    #[inline] pub fn reflect<A: Conv<F3>>(v: A) -> F3 {
+    #[inline(always)] pub fn reflect<A: Conv<F3>>(v: A) -> F3 {
         let v = v.conv();
         A3(-v[X], -v[Y], v[Z])
     }
 
-    #[inline] pub fn same_hemisphere<A, B>(v1: A, v2: B) -> bool
+    #[inline(always)] pub fn same_hemisphere<A, B>(v1: A, v2: B) -> bool
         where A: Conv<F3>, B: Conv<F3>
     { F3::dot(v1.conv(), v2.conv()) >= 0. }
 

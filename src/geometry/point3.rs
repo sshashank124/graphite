@@ -17,12 +17,12 @@ op!(Mul::mul, *P ->  F -> P);
 op!(Mul::mul,  T -> *P -> P);
 op!(Div::div,  T -> *P -> P);
 
-impl Conv<P> for F3 { #[inline] fn conv(self) -> P { P(self) } }
-impl Conv<F3> for P { #[inline] fn conv(self) -> F3 { self.0 } }
+impl Conv<P> for F3 { #[inline(always)] fn conv(self) -> P { P(self) } }
+impl Conv<F3> for P { #[inline(always)] fn conv(self) -> F3 { self.0 } }
 
 impl Index<Dim> for P {
     type Output = F;
-    #[inline] fn index(&self, dim: Dim) -> &F { &self.0[dim] }
+    #[inline(always)] fn index(&self, dim: Dim) -> &F { &self.0[dim] }
 }
 
 

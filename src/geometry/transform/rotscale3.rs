@@ -8,7 +8,7 @@ pub struct RotScale3(Option<A3<F3>>);
 
 impl One for RotScale3 { const ONE: Self = Self(None); }
 impl Default for RotScale3
-{ #[inline] fn default() -> Self { Self::ONE } }
+{ #[inline(always)] fn default() -> Self { Self::ONE } }
 
 impl RotScale3 {
     #[inline] const fn from_rows(r1: F3, r2: F3, r3: F3) -> Self
@@ -65,12 +65,12 @@ impl<A> Mul<A3<A>> for RotScale3
     where A: Copy + Zero + Add<Output = A> + Mul<F, Output = A>
 {
     type Output = A3<A>;
-    #[inline] fn mul(self, o: A3<A>) -> A3<A>
+    #[inline(always)] fn mul(self, o: A3<A>) -> A3<A>
     { self.0.map_or_else(|| o, |m| A3::rep(o).zip(m, A3::dot)) }
 }
 
 impl Mul for RotScale3 {
     type Output = Self;
-    #[inline] fn mul(self, o: Self) -> Self
+    #[inline(always)] fn mul(self, o: Self) -> Self
     { self.t().0.map_or_else(|| o, |m| Self(Some(o * m)).t()) }
 }

@@ -17,68 +17,61 @@ pub type U2 = A2<U>;
 pub struct A2<A>(pub A, pub A);
 
 impl<A> A2<A> {
-    #[inline] pub const fn as_ref(&self) -> A2<&A> { A2(&self.0, &self.1) }
+    #[inline(always)] pub const fn as_ref(&self) -> A2<&A> { A2(&self.0, &self.1) }
 
-    #[inline] pub fn map<B>(self, f: impl Fn(A) -> B) -> A2<B>
-    { A2(f(self.0), f(self.1)) }
+    #[inline(always)] pub fn map<B>(self, f: impl Fn(A) -> B) -> A2<B> { A2(f(self.0), f(self.1)) }
 
-    #[inline]
-    pub fn zip<B, C>(self, b: A2<B>, f: impl Fn(A, B) -> C) -> A2<C>
+    #[inline(always)] pub fn zip<B, C>(self, b: A2<B>, f: impl Fn(A, B) -> C) -> A2<C>
     { A2(f(self.0, b.0), f(self.1, b.1)) }
 
-    #[inline]
-    pub fn zips<B, C>(self, b: B, f: impl Fn(A, B) -> C) -> A2<C>
-        where B: Copy,
+    #[inline(always)] pub fn zips<B, C>(self, b: B, f: impl Fn(A, B) -> C) -> A2<C> where B: Copy
     { A2(f(self.0, b), f(self.1, b)) }
 
-    #[inline] pub fn zipi<B>(&mut self, b: A2<B>, f: impl Fn(&mut A, B))
+    #[inline(always)] pub fn zipi<B>(&mut self, b: A2<B>, f: impl Fn(&mut A, B))
     { f(&mut self.0, b.0); f(&mut self.1, b.1); }
 
-    #[inline] pub fn zipsi<B>(&mut self, b: B, f: impl Fn(&mut A, B))
-        where B: Copy,
+    #[inline(always)] pub fn zipsi<B>(&mut self, b: B, f: impl Fn(&mut A, B)) where B: Copy
     { f(&mut self.0, b); f(&mut self.1, b); }
 
-    #[inline] pub fn fold<B>(self, b: B, f: impl Fn(B, A) -> B) -> B
+    #[inline(always)] pub fn fold<B>(self, b: B, f: impl Fn(B, A) -> B) -> B
     { f(f(b, self.0), self.1) }
 
-    #[inline]
-    pub fn reduce<B>(self, f: impl Fn(A, A) -> B) -> B { f(self.0, self.1) }
+    #[inline(always)] pub fn reduce<B>(self, f: impl Fn(A, A) -> B) -> B { f(self.0, self.1) }
 
-    #[inline] pub fn dot<B, C>(a: A2<A>, b: A2<B>) -> C
+    #[inline(always)] pub fn dot<B, C>(a: A2<A>, b: A2<B>) -> C
         where C: Zero + Add<Output = C>,
               A2<A>: Mul<A2<B>, Output = A2<C>>,
     { (a * b).sum() }
 }
 
 impl<A> A2<A> where A: Copy {
-    #[inline] pub const fn rep(a: A) -> A2<A> { A2(a, a) }
+    #[inline(always)] pub const fn rep(a: A) -> A2<A> { A2(a, a) }
 
-    #[inline] pub fn flip(self) -> Self { A2(self[1], self[0]) }
+    #[inline(always)] pub fn flip(self) -> Self { A2(self[1], self[0]) }
 }
 
 impl<A> A2<A> where A: Add<Output = A>
-{ #[inline] pub fn sum(self) -> A { self.reduce(Add::add) } }
+{ #[inline(always)] pub fn sum(self) -> A { self.reduce(Add::add) } }
 
 impl<A> A2<A> where A: Add<Output = A> + Mul<F, Output = A>
-{ #[inline] pub fn mean(self) -> A { self.sum() * 0.5 } }
+{ #[inline(always)] pub fn mean(self) -> A { self.sum() * 0.5 } }
 
 impl<A> A2<A> where A: Mul<Output = A>
-{ #[inline] pub fn product(self) -> A { self.reduce(Mul::mul) } }
+{ #[inline(always)] pub fn product(self) -> A { self.reduce(Mul::mul) } }
 
 impl<A> Sum for A2<A> where Self: Zero + Add<Output=Self> {
-    #[inline] fn sum<It>(it: It) -> Self where It: Iterator<Item=Self>
+    #[inline(always)] fn sum<It>(it: It) -> Self where It: Iterator<Item=Self>
     { it.fold(Self::ZERO, Add::add) }
 }
 
 impl<A> Product for A2<A> where Self: One + Mul<Output=Self> {
-    #[inline]
+    #[inline(always)]
     fn product<It>(it: It) -> Self where It: Iterator<Item=Self>
     { it.fold(Self::ONE, Mul::mul) }
 }
 
 impl<A> A2<A> where A: Zero + One {
-    #[inline]
-    pub fn basis(dim: Dim) -> Self {
+    #[inline(always)] pub fn basis(dim: Dim) -> Self {
         match dim {
             X => A2(A::ONE, A::ZERO),
             Y => A2(A::ZERO, A::ONE),
@@ -103,7 +96,7 @@ macro_rules! index {
     ($type:ident[$v1:tt, $v2:tt]) => {
         impl<A> Index<$type> for A2<A> {
             type Output = A;
-            #[inline]
+            #[inline(always)]
             #[allow(clippy::match_bool)]
             fn index(&self, i: $type) -> &Self::Output {
                 match i {
@@ -116,7 +109,7 @@ macro_rules! index {
         }
 
         impl<A> IndexMut<$type> for A2<A> {
-            #[inline]
+            #[inline(always)]
             #[allow(clippy::match_bool)]
             fn index_mut(&mut self, i: $type) -> &mut Self::Output {
                 match i {
@@ -177,24 +170,24 @@ scalar_binary_assign_op!(A2, BitXorAssign::bitxor_assign);
 scalar_binary_assign_op!(A2, RemAssign::rem_assign);
 
 impl F2 {
-    #[inline] pub fn min(self) -> F { self.reduce(F::min) }
-    #[inline] pub fn max(self) -> F { self.reduce(F::max) }
+    #[inline(always)] pub fn min(self) -> F { self.reduce(F::min) }
+    #[inline(always)] pub fn max(self) -> F { self.reduce(F::max) }
 }
 
 impl<A> Conv<A2<A>> for (A, A)
-{ #[inline] fn conv(self) -> A2<A> { A2(self.0, self.1) } }
+{ #[inline(always)] fn conv(self) -> A2<A> { A2(self.0, self.1) } }
 
 impl<A> Conv<(A, A)> for A2<A>
-{ #[inline] fn conv(self) -> (A, A) { (self.0, self.1) } }
+{ #[inline(always)] fn conv(self) -> (A, A) { (self.0, self.1) } }
 
 impl<A> Conv<A2<A>> for [A; 2] where A: Copy
-{ #[inline] fn conv(self) -> A2<A> { A2(self[0], self[1]) } }
+{ #[inline(always)] fn conv(self) -> A2<A> { A2(self[0], self[1]) } }
 
 impl<A> Conv<[A; 2]> for A2<A>
-{ #[inline] fn conv(self) -> [A; 2] { [self.0, self.1] } }
+{ #[inline(always)] fn conv(self) -> [A; 2] { [self.0, self.1] } }
 
 impl<A, B> Conv<A2<B>> for A2<A> where A: Conv<B>
-{ #[inline] fn conv(self) -> A2<B> { A2(self.0.conv(), self.1.conv()) } }
+{ #[inline(always)] fn conv(self) -> A2<B> { A2(self.0.conv(), self.1.conv()) } }
 
 
 #[cfg(feature="serde-derive")]

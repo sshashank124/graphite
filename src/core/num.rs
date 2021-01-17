@@ -6,6 +6,7 @@ pub trait Zero { const ZERO: Self; }
 pub trait One { const ONE: Self; }
 pub trait Two { const TWO: Self; }
 pub trait Half { const HALF: Self; }
+pub trait OneThird { const ONE_THIRD: Self; }
 pub trait Inv { type Output; fn inv(self) -> Self; }
 pub trait Epsilon: Copy { const EPS: Self; }
 
@@ -16,30 +17,10 @@ pub trait Num: Copy + PartialEq + PartialOrd
              + Mul<Self, Output = Self> + MulAssign<Self>
              + Div<Self, Output = Self> + DivAssign<Self>
 {
-    #[inline] fn sq(self) -> Self { self * self }
-
-    #[inline] fn abs(a: Self) -> Self { if a >= Self::ZERO { a } else { -a } }
-
-    #[inline] fn min(a: Self, b: Self) -> Self { if a < b { a } else { b } }
-    #[inline] fn max(a: Self, b: Self) -> Self { if a < b { b } else { a } }
-
-    #[inline] fn is_pos(a: Self) -> bool { a > Self::ZERO }
-    #[inline] fn is_nonpos(a: Self) -> bool { !Self::is_pos(a) }
-
-    #[inline] fn is_neg(a: Self) -> bool { a < Self::ZERO }
-    #[inline] fn is_nonneg(a: Self) -> bool { !Self::is_neg(a) }
-
-    #[inline]
-    fn clamp(v: Self, a: Self, b: Self) -> Self { Num::min(Num::max(v, a), b) }
-    #[inline]
-    fn clamp_pos(v: Self) -> Self { Num::max(v, Self::ZERO) }
-    #[inline]
-    fn clamp_unit(v: Self) -> Self { Num::clamp(v, Self::ZERO, Self::ONE) }
-    #[inline]
-    fn clamp_one(v: Self) -> Self { Num::clamp(v, -Self::ONE, Self::ONE) }
+    #[inline(always)] fn sq(self) -> Self { self * self }
 }
 
-pub trait Float: Num + Half + Inv + Epsilon {
+pub trait Float: Num + Half + OneThird + Inv + Epsilon {
     const NEG_INF: Self;
     const POS_INF: Self;
 
@@ -57,9 +38,6 @@ pub trait Float: Num + Half + Inv + Epsilon {
     fn ceili(self) -> I;
     fn floori(self) -> I;
 
-    fn exp(self) -> Self;
-    fn sqrt(self) -> Self;
-
     fn sin(self) -> Self;
     fn cos(self) -> Self;
     fn tan(self) -> Self;
@@ -68,13 +46,6 @@ pub trait Float: Num + Half + Inv + Epsilon {
     fn tand(self) -> Self;
 
     fn discrete(a: Self, n: I) -> I;
-
-    #[inline]
-    fn approx_eq(a: Self, b: Self) -> bool { Self::abs(a - b) < Self::EPS }
-    #[inline]
-    fn approx_zero(a: Self) -> bool { Self::approx_eq(a, Self::ZERO) }
-    #[inline]
-    fn approx_one(a: Self) -> bool { Self::approx_eq(a, Self::ONE) }
 }
 
 #[inline] pub fn difference_of_products(a: F, b: F, c: F, d: F) -> F {
