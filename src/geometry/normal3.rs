@@ -1,7 +1,7 @@
 use std::ops::{Add, Div, Index, Mul, Neg};
 
 use super::*;
-use crate::op;
+use crate::{conv, op};
 
 #[derive(Clone, Copy, Debug, PartialEq)]
 #[cfg_attr(feature="serde-derive", derive(Deserialize, Serialize))]
@@ -16,20 +16,16 @@ op!(Mul::mul, *N ->  F -> N);
 
 impl Mul<N> for T {
     type Output = N;
-    #[inline] fn mul(self, n: N) -> N { N::from(self.inv().t() * n.0) }
+    #[inline] fn mul(self, n: N) -> N { conv!(self.inv().t() * n.0 => N) }
 }
 
 impl Div<N> for T {
     type Output = N;
-    #[inline] fn div(self, n: N) -> N { N::from(self.inv().t() / n.0) }
+    #[inline] fn div(self, n: N) -> N { conv!(self.inv().t() / n.0 => N) }
 }
 
-impl From<F3> for N
-{ #[inline] fn from(f3: F3) -> Self { Self::from(V(f3)) } }
-impl From<N> for F3 { #[inline] fn from(n: N) -> Self { n.0.0 } }
-impl From<V> for N
-{ #[inline] fn from(v: V) -> Self { Self(v.unit()) } }
-impl From<N> for V { #[inline] fn from(n: N) -> Self { n.0 } }
+impl Conv<N> for V { #[inline] fn conv(self) -> N { N(self.unit()) } }
+impl Conv<V> for N { #[inline] fn conv(self) -> V { self.0 } }
 
 impl Index<Dim> for N {
     type Output = F;
@@ -44,6 +40,6 @@ mod tests {
 
     #[test] fn deser_n() {
         assert_eq!(serde_json::from_str::<N>("[-1, 1, 0.5]").unwrap(),
-                   N::from(A3(-1., 1., 0.5)));
+                   conv!(A3(-1., 1., 0.5) => V => N));
     }
 }

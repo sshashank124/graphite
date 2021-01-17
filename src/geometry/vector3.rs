@@ -11,7 +11,7 @@ pub struct V(pub(crate) F3);
 impl Zero for V { const ZERO: Self = V(F3::ZERO); }
 
 impl V {
-    #[inline] pub fn norm2(self) -> F { F3::dot(self, self) }
+    #[inline] pub fn norm2(self) -> F { F3::dot(self.0, self.0) }
     #[inline] pub fn norm(self) -> F { self.norm2().sqrt() }
     #[inline] pub fn unit(self) -> V { self / self.norm() }
 
@@ -43,8 +43,8 @@ impl Div<V> for T {
     #[inline] fn div(self, v: V) -> V { V(self.rot() / v.0) }
 }
 
-impl From<F3> for V { #[inline] fn from(f3: F3) -> Self { Self(f3) } }
-impl From<V> for F3 { #[inline] fn from(v: V) -> Self { v.0 } }
+impl Conv<V> for F3 { #[inline] fn conv(self) -> V { V(self) } }
+impl Conv<F3> for V { #[inline] fn conv(self) -> F3 { self.0 } }
 
 impl Index<Dim> for V {
     type Output = F;

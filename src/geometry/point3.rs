@@ -17,8 +17,8 @@ op!(Mul::mul, *P ->  F -> P);
 op!(Mul::mul,  T -> *P -> P);
 op!(Div::div,  T -> *P -> P);
 
-impl From<F3> for P { #[inline] fn from(f3: F3) -> Self { Self(f3) } }
-impl From<P> for F3 { #[inline] fn from(p: P) -> Self { p.0 } }
+impl Conv<P> for F3 { #[inline] fn conv(self) -> P { P(self) } }
+impl Conv<F3> for P { #[inline] fn conv(self) -> F3 { self.0 } }
 
 impl Index<Dim> for P {
     type Output = F;

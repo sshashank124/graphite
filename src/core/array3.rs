@@ -193,17 +193,17 @@ impl F3 {
     #[inline] pub fn max(self) -> F { self.reduce(F::max) }
 }
 
-impl<A> From<(A, A, A)> for A3<A>
-{ #[inline] fn from(aa: (A, A, A)) -> A3<A> { A3(aa.0, aa.1, aa.2) } }
+impl<A> ConvFrom<(A, A, A)> for A3<A>
+{ #[inline] fn of(aa: (A, A, A)) -> Self { A3(aa.0, aa.1, aa.2) } }
 
-impl<A> From<A3<A>> for (A, A, A)
-{ #[inline] fn from(aa: A3<A>) -> (A, A, A) { (aa.0, aa.1, aa.2) } }
+impl<A> ConvFrom<A3<A>> for (A, A, A)
+{ #[inline] fn of(aa: A3<A>) -> Self { (aa.0, aa.1, aa.2) } }
 
-impl<A> From<[A; 3]> for A3<A> where A: Copy
-{ #[inline] fn from(aa: [A; 3]) -> A3<A> { A3(aa[0], aa[1], aa[2]) } }
+impl<A> ConvFrom<[A; 3]> for A3<A> where A: Copy
+{ #[inline] fn of(aa: [A; 3]) -> Self { A3(aa[0], aa[1], aa[2]) } }
 
-impl<A> From<A3<A>> for [A; 3]
-{ #[inline] fn from(aa: A3<A>) -> [A; 3] { [aa.0, aa.1, aa.2] } }
+impl<A> ConvFrom<A3<A>> for [A; 3]
+{ #[inline] fn of(aa: A3<A>) -> Self { [aa.0, aa.1, aa.2] } }
 
 impl<A, B> Conv<A3<B>> for A3<A> where A: Conv<B> {
     #[inline] fn conv(self) -> A3<B>

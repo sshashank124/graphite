@@ -1,4 +1,5 @@
 use super::*;
+use crate::conv;
 
 #[derive(Clone, Copy, Debug, PartialEq)]
 #[cfg_attr(feature="serde-derive", derive(Deserialize))]
@@ -16,11 +17,11 @@ impl RotScale3 {
     #[inline] pub fn from_cols(c1: F3, c2: F3, c3: F3) -> Self
     { Self::from_rows(c1, c2, c3).t() }
 
-    #[inline] pub fn scale<A: Into<F3>>(s: A) -> Self
-    { Self(Some(XYZ.map(F3::basis) * s.into())) }
+    #[inline] pub fn scale<A: Conv<F3>>(s: A) -> Self
+    { Self(Some(XYZ.map(F3::basis) * s.conv())) }
 
-    #[inline] pub fn rotate<A: Into<F3>>(axis: A, angle: F) -> Self {
-        let A3(x, y, z) = F3::from(V(axis.into()).unit());
+    #[inline] pub fn rotate<A: Conv<F3>>(axis: A, angle: F) -> Self {
+        let A3(x, y, z) = conv!(axis.conv() => V => N => V => F3);
         let ct = angle.cosd();
         let cc = 1. - ct;
         let st = angle.sind();
@@ -36,18 +37,19 @@ impl RotScale3 {
     }
 
     #[inline] pub fn look_at(dir: V, up: V) -> Self {
-        let dir = dir.unit();
-        let right = (up.unit() * dir).unit();
-        let up = (dir * right).unit();
-        Self::from_cols(F3::from(right), F3::from(up), F3::from(dir))
+        let up = conv!(up => N => V);
+        let dir = conv!(dir => N => V);
+        let right = conv!(up * dir => N => V);
+        let up = conv!(dir * right => N => V => F3);
+        Self::from_cols(conv!(right => F3), up, conv!(dir => F3))
     }
 
-    #[inline] pub fn from_frame<A: Into<F3>>(v: A) -> Self {
-        let v = V(v.into());
+    #[inline] pub fn from_frame<A: Conv<F3>>(v: A) -> Self {
+        let v = V(v.conv());
         let v2 = V(if F::abs(v[X]) > F::abs(v[Y]) {
             A3(-v[Z], 0., v[X]) / F::sqrt(v[X].sq() + v[Z].sq())
         } else { A3(0., v[Z], -v[Y]) / F::sqrt(v[Y].sq() + v[Z].sq()) });
-        Self::from_cols(F3::from(v2), F3::from(v * v2), F3::from(v))
+        Self::from_cols(conv!(v2 => F3), conv!(v * v2 => F3), conv!(v => F3))
     }
 
     #[inline] pub fn t(&self) -> Self {

@@ -26,21 +26,21 @@ impl Affine3 {
     #[inline] const fn new(f: T3, i: T3) -> Self { Self { f, i } }
 
     #[inline] pub fn translate<A>(v: A) -> Self
-        where A: Copy + Neg<Output=A> + Into<F3>
+        where A: Copy + Neg<Output=A> + Conv<F3>
     { Self::new(T3::translate(v), T3::translate(-v)) }
 
     #[inline] pub fn scale<A>(v: A) -> Self
-        where A: Copy + Inv + Into<F3>
+        where A: Copy + Inv + Conv<F3>
     { Self::new(T3::scale(v), T3::scale(v.inv())) }
 
     #[inline] pub fn rotate<A>(axis: A, angle: F) -> Self
-        where A: Copy + Into<F3>
+        where A: Copy + Conv<F3>
     { Self::new(T3::rotate(axis, angle), T3::rotate(axis, -angle)) }
 
     #[inline] pub fn look_at(pos: P, target: P, up: V) -> Self
     { Self::new(T3::look_at(pos, target, up), T3::ONE) }
 
-    #[inline] pub fn from_frame<A: Into<F3>>(v: A) -> Self {
+    #[inline] pub fn from_frame<A: Conv<F3>>(v: A) -> Self {
         let t = T3::from_frame(v);
         Self::new(t, t.t())
     }
