@@ -44,17 +44,10 @@ impl<A> A2<A> {
     #[inline]
     pub fn reduce<B>(self, f: impl Fn(A, A) -> B) -> B { f(self.0, self.1) }
 
-    #[inline] pub fn inner_product<B, C, AA, BB>(a: AA, b: BB) -> C
-        where AA: Into<A2<A>>,
-              BB: Into<A2<B>>,
-              C: Zero + Add<Output = C>,
+    #[inline] pub fn dot<B, C>(a: A2<A>, b: A2<B>) -> C
+        where C: Zero + Add<Output = C>,
               A2<A>: Mul<A2<B>, Output = A2<C>>,
-    { (a.into() * b.into()).sum() }
-
-    #[inline] pub fn dot<AA, BB>(a: AA, b: BB) -> F
-        where AA: Into<F2>,
-              BB: Into<F2>
-    { A2::inner_product(a, b) }
+    { (a * b).sum() }
 }
 
 impl<A> A2<A> where A: Copy {

@@ -5,30 +5,30 @@ use super::*;
 pub struct Frame;
 
 impl Frame {
-    #[inline] pub fn ct<A: Into<F3>>(v: A) -> F { v.into()[Z] }
-    #[inline] pub fn st<A: Into<F3>>(v: A) -> F
+    #[inline] pub fn ct<A: Conv<F3>>(v: A) -> F { v.conv()[Z] }
+    #[inline] pub fn st<A: Conv<F3>>(v: A) -> F
     { F::sqrt(Self::s2t(v)) }
-    #[inline] pub fn tt<A: Copy + Into<F3>>(v: A) -> F
+    #[inline] pub fn tt<A: Copy + Conv<F3>>(v: A) -> F
     { Self::st(v) / Self::ct(v) }
 
-    #[inline] pub fn c2t<A: Into<F3>>(v: A) -> F { Self::ct(v).sq() }
-    #[inline] pub fn s2t<A: Into<F3>>(v: A) -> F
+    #[inline] pub fn c2t<A: Conv<F3>>(v: A) -> F { Self::ct(v).sq() }
+    #[inline] pub fn s2t<A: Conv<F3>>(v: A) -> F
     { F::clamp_pos(1. - Self::c2t(v)) }
-    #[inline] pub fn t2t<A: Copy + Into<F3>>(v: A) -> F
+    #[inline] pub fn t2t<A: Copy + Conv<F3>>(v: A) -> F
     { Self::s2t(v) / Self::c2t(v) }
 
-    #[inline] pub fn reflect<A: Into<F3>>(v: A) -> F3 {
-        let v = v.into();
+    #[inline] pub fn reflect<A: Conv<F3>>(v: A) -> F3 {
+        let v = v.conv();
         A3(-v[X], -v[Y], v[Z])
     }
 
     #[inline] pub fn same_hemisphere<A, B>(v1: A, v2: B) -> bool
-        where A: Into<F3>, B: Into<F3>
-    { F3::dot(v1, v2) >= 0. }
+        where A: Conv<F3>, B: Conv<F3>
+    { F3::dot(v1.conv(), v2.conv()) >= 0. }
 
     // Frame transforms
-    #[inline] pub fn cart2spher<A: Into<F3>>(v: A) -> F2 {
-        let v = v.into();
+    #[inline] pub fn cart2spher<A: Conv<F3>>(v: A) -> F2 {
+        let v = v.conv();
         let y = F::atan2(v[Y], v[X]);
         let y = if y < 0. { y + F::TWO_PI } else { y };
         A2(F::acos(v[Z]), y)

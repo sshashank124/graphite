@@ -43,17 +43,10 @@ impl<A> A3<A> {
     #[inline] pub fn reduce(self, f: impl Fn(A, A) -> A) -> A
     { f(f(self.0, self.1), self.2) }
 
-    #[inline] pub fn inner_product<B, C, AA, BB>(a: AA, b: BB) -> C
-        where AA: Into<A3<A>>,
-              BB: Into<A3<B>>,
-              C: Zero + Add<Output = C>,
+    #[inline] pub fn dot<B, C>(a: A3<A>, b: A3<B>) -> C
+        where C: Zero + Add<Output = C>,
               A3<A>: Mul<A3<B>, Output = A3<C>>,
-    { (a.into() * b.into()).sum() }
-
-    #[inline] pub fn dot<AA, BB>(a: AA, b: BB) -> F
-        where AA: Into<F3>,
-              BB: Into<F3>
-    { A3::inner_product(a, b) }
+    { (a * b).sum() }
 }
 
 impl<A> A3<A> where A: Copy {

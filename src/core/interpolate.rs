@@ -21,10 +21,7 @@ pub trait Interp<A> {
 impl<A> Interp<A> for LinearScale
     where A2<A>: Mul<F2, Output = A2<A>>,
               A: Copy + Zero + Add<Output = A>
-{
-    #[inline] fn interp(a: A2<A>, t: F) -> A
-    { A2::inner_product(a, A2(1. - t, t)) }
-}
+{ #[inline] fn interp(a: A2<A>, t: F) -> A { A2::dot(a, A2(1. - t, t)) } }
 
 impl<A> Interp<A> for SmoothScale
     where A: Copy + Zero + Add<Output = A> + Mul<F, Output = A>

@@ -66,7 +66,7 @@ impl<A> Mul<A3<A>> for RotScale3
 {
     type Output = A3<A>;
     #[inline] fn mul(self, o: A3<A>) -> A3<A>
-    { self.0.map_or_else(|| o, |m| A3::rep(o).zip(m, A3::inner_product)) }
+    { self.0.map_or_else(|| o, |m| A3::rep(o).zip(m, A3::dot)) }
 }
 
 impl Mul for RotScale3 {

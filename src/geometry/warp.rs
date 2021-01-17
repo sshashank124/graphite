@@ -59,7 +59,7 @@ impl CosineHemisphere {
         F3::a2a(p, F::sqrt(1. - F2::dot(p, p)))
     }
 
-    #[inline] pub fn pdf<A: Into<F3>>(s: A) -> F
+    #[inline] pub fn pdf<A: Conv<F3>>(s: A) -> F
     { Frame::ct(s) * F::INV_PI }
 }
 
@@ -99,7 +99,7 @@ impl BeckmannHemisphere {
         A3(r * F::cos(phi), r * F::sin(phi), F::sqrt(c2t))
     }
 
-    #[inline] pub fn pdf<A: Into<F3>>(s: A, alpha: F) -> F {
+    #[inline] pub fn pdf<A: Conv<F3>>(s: A, alpha: F) -> F {
         let a2_inv = alpha.sq().inv();
         let ct = Frame::ct(s);
         (F::INV_PI * a2_inv * F::exp(-a2_inv * (ct.sq().inv() - 1.)))
