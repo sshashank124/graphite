@@ -21,7 +21,7 @@ impl RotScale3 {
     { Self(Some(XYZ.map(F3::basis) * s.conv())) }
 
     #[inline] pub fn rotate<A: Conv<F3>>(axis: A, angle: F) -> Self {
-        let A3(x, y, z) = conv!(axis.conv() => V => N => V => F3);
+        let A3(x, y, z) = conv!(axis.conv() => N => F3);
         let ct = angle.cosd();
         let cc = 1. - ct;
         let st = angle.sind();
@@ -40,7 +40,7 @@ impl RotScale3 {
         let up = conv!(up => N => V);
         let dir = conv!(dir => N => V);
         let right = conv!(up * dir => N => V);
-        let up = conv!(dir * right => N => V => F3);
+        let up = conv!(dir * right => N => F3);
         Self::from_cols(conv!(right => F3), up, conv!(dir => F3))
     }
 

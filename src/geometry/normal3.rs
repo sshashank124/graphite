@@ -43,6 +43,6 @@ mod tests {
 
     #[test] fn deser_n() {
         assert_eq!(serde_json::from_str::<N>("[-1, 1, 0.5]").unwrap(),
-                   conv!(A3(-1., 1., 0.5) => V => N));
+                   conv!(A3(-1., 1., 0.5) => N));
     }
 }
